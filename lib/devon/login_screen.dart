@@ -20,7 +20,7 @@ class _Login_screenState extends State<Login_screen> {
 
   bool _isChecked = false;
 
-  bool isUserAuthenticated(List<Item> itemList) {
+  bool isUserAuthenticated(List<User> itemList) {
     for (var item in itemList) {
       if (item.email == _emailController.text &&
           item.password == _passwordController.text) {
@@ -55,8 +55,8 @@ class _Login_screenState extends State<Login_screen> {
 
   @override
   Widget build(BuildContext context) {
-    final itemListProvider = Provider.of<ItemListProvider>(context);
-    final itemList = itemListProvider.items;
+    final itemListProvider = Provider.of<UserListProvider>(context);
+    final itemList = itemListProvider.Users;
     return Scaffold(
       body: Column(
         children: [

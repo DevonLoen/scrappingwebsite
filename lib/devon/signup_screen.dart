@@ -17,8 +17,8 @@ class _Signup_screenState extends State<Signup_screen> {
 
   @override
   Widget build(BuildContext context) {
-    final itemListProvider = Provider.of<ItemListProvider>(context);
-    final itemList = itemListProvider.items;
+    final userListProvider = Provider.of<UserListProvider>(context);
+    final itemList = userListProvider.Users;
     return Scaffold(
       body: Column(
         children: [
@@ -116,11 +116,11 @@ class _Signup_screenState extends State<Signup_screen> {
               shadowColor: Colors.black,
             ),
             onPressed: () {
-              Item newItem = Item(
+              User newItem = User(
                   name: 'John Doe',
                   email: 'john@example.com',
                   password: '123456');
-              itemListProvider.addItem(newItem);
+              userListProvider.addUser(newItem);
 
               Navigator.push(
                 context,

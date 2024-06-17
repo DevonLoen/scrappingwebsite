@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Item {
+class User {
   final String name;
   final String email;
   final String password;
 
-  Item({required this.name, required this.email, required this.password});
+  User({required this.name, required this.email, required this.password});
 }
 
-class ItemListProvider extends ChangeNotifier {
-  List<Item> _items = [Item(email: '123', password: '123', name: 'devon')];
+class UserListProvider extends ChangeNotifier {
+  List<User> _Users = [User(email: '123', password: '123', name: 'devon')];
 
-  List<Item> get items => _items;
+  List<User> get Users => _Users;
 
-  void addItem(Item item) {
-    _items.add(item);
+  void addUser(User User) {
+    _Users.add(User);
     notifyListeners();
   }
 
-  void removeItem(int index) {
-    _items.removeAt(index);
+  void removeUser(int index) {
+    _Users.removeAt(index);
     notifyListeners();
   }
 }
