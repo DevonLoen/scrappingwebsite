@@ -5,6 +5,7 @@ import 'package:scrappingwebsite/devon/welcome_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:scrappingwebsite/devon/user_provider.dart';
 import 'package:scrappingwebsite/tian/CartPage.dart';
+import 'package:scrappingwebsite/tian/PurchasePage.dart';
 import 'package:scrappingwebsite/tian/cartListProvider.dart';
 import 'package:scrappingwebsite/tian/detailPageScreen.dart';
 
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
           useMaterial3: true,
         ),
-        home: const CartPage(),
+        home: const PurchasePage(),
       ),
     );
   }
