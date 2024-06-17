@@ -10,7 +10,7 @@ class Item {
 }
 
 class ItemListProvider extends ChangeNotifier {
-  List<Item> _items = [];
+  List<Item> _items = [Item(email: '123', password: '123', name: 'devon')];
 
   List<Item> get items => _items;
 

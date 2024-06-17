@@ -1,19 +1,57 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:scrappingwebsite/devon/home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
-import 'package:scrappingwebsite/login_screen.dart';
-import 'package:scrappingwebsite/user_provider.dart';
+import 'package:scrappingwebsite/devon/user_provider.dart';
 
-class Signup_screen extends StatefulWidget {
-  const Signup_screen({super.key});
+class Login_screen extends StatefulWidget {
+  const Login_screen({super.key});
 
   @override
-  State<Signup_screen> createState() => _Signup_screenState();
+  State<Login_screen> createState() => _Login_screenState();
 }
 
-class _Signup_screenState extends State<Signup_screen> {
+class _Login_screenState extends State<Login_screen> {
   final _passwordController = TextEditingController();
-  final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
+  String email = '';
+  String password = '';
+
+  bool _isChecked = false;
+
+  bool isUserAuthenticated(List<Item> itemList) {
+    for (var item in itemList) {
+      if (item.email == _emailController.text &&
+          item.password == _passwordController.text) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void saveData(name, pass) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', name);
+    await prefs.setString('password', pass);
+  }
+
+  void getData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      email = prefs.getString('email')!;
+      password = prefs.getString('password')!;
+      _passwordController.text = password;
+      _emailController.text = email;
+    });
+    // print('Email: $email, Password: $password');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,26 +87,12 @@ class _Signup_screenState extends State<Signup_screen> {
             height: 25,
           ),
           Text(
-            'Sign Up',
+            'Log In',
             style: TextStyle(
               fontSize: 35, // Ukuran font
               // fontStyle: FontStyle.italic, // Gaya font (miring)
               fontWeight: FontWeight.bold, // Berat font (tebal)
               color: Colors.black,
-            ),
-          ),
-          SizedBox(
-            height: 25,
-          ),
-          Container(
-            width: 300,
-            child: TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(
-                // labelText: 'Password',
-                hintText: 'Name',
-                prefixIcon: Icon(Icons.person), // Ikon di depan TextField
-              ),
             ),
           ),
           SizedBox(
@@ -103,7 +127,54 @@ class _Signup_screenState extends State<Signup_screen> {
             ),
           ),
           SizedBox(
-            height: 30,
+            height: 25,
+          ),
+          Container(
+            width: 300,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _isChecked,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _isChecked = value!;
+                        });
+                      },
+                      checkColor: Colors.white,
+                      fillColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                        // Warna latar belakang ketika checkbox dicentang
+                        if (states.contains(MaterialState.selected)) {
+                          return Colors
+                              .orange; // Warna orange ketika checkbox dicentang
+                        }
+                        // Warna latar belakang ketika checkbox tidak dicentang
+                        return Colors.white;
+                      }),
+                    ),
+                    Text('Remember Me'),
+                  ],
+                ),
+                InkWell(
+                  onTap: () {
+                    // Tindakan yang ingin dilakukan saat CircleAvatar diklik
+                    print('forgotpassword diklik!');
+                  },
+                  borderRadius: BorderRadius.circular(
+                      5), // Membuat efek ink menyesuaikan bentuk CircleAvatar
+                  child: Text(
+                    'Forgot Password?',
+                    style: TextStyle(color: Colors.orange),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 50,
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -116,18 +187,19 @@ class _Signup_screenState extends State<Signup_screen> {
               shadowColor: Colors.black,
             ),
             onPressed: () {
-              Item newItem = Item(
-                  name: 'John Doe',
-                  email: 'john@example.com',
-                  password: '123456');
-              itemListProvider.addItem(newItem);
-
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Login_screen()),
-              );
+              if (isUserAuthenticated(itemList)) {
+                _isChecked
+                    ? saveData(_emailController.text, _passwordController.text)
+                    : null;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Home_screen()),
+                );
+              } else {
+                print('login tidak tervalidasi');
+              }
             },
-            child: Text('Sign Up'),
+            child: Text('Log In'),
           ),
           SizedBox(
             height: 100,
@@ -145,7 +217,7 @@ class _Signup_screenState extends State<Signup_screen> {
                 ),
               ),
               Text(
-                ' Or signup with ',
+                ' Or login with ',
                 style: TextStyle(color: Colors.grey),
               ),
               Expanded(

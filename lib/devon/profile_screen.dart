@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:scrappingwebsite/history_screen.dart';
-import 'package:scrappingwebsite/home_screen.dart';
+import 'package:scrappingwebsite/devon/history_screen.dart';
+import 'package:scrappingwebsite/devon/home_screen.dart';
 
 class Profile_screen extends StatefulWidget {
   const Profile_screen({super.key});

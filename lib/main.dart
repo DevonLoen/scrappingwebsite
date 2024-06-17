@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:scrappingwebsite/login_screen.dart';
-import 'package:scrappingwebsite/profile_screen.dart';
-import 'package:scrappingwebsite/welcome_screen.dart';
+import 'package:scrappingwebsite/devon/login_screen.dart';
+import 'package:scrappingwebsite/devon/profile_screen.dart';
+import 'package:scrappingwebsite/devon/welcome_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:scrappingwebsite/user_provider.dart';
+import 'package:scrappingwebsite/devon/user_provider.dart';
+import 'package:scrappingwebsite/tian/detailPageScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
           useMaterial3: true,
         ),
-        home: Welcome_screen(),
+        home: const DetailPageWidget(),
       ),
     );
   }

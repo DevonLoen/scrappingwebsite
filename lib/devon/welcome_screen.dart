@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:scrappingwebsite/login_screen.dart';
-import 'package:scrappingwebsite/signup_screen.dart';
+import 'package:scrappingwebsite/devon/login_screen.dart';
+import 'package:scrappingwebsite/devon/signup_screen.dart';
 
 class Welcome_screen extends StatefulWidget {
   const Welcome_screen({super.key});

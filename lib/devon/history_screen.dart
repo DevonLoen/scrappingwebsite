@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:scrappingwebsite/history_screen.dart';
-import 'package:scrappingwebsite/profile_screen.dart';
+import 'package:scrappingwebsite/devon/home_screen.dart';
+import 'package:scrappingwebsite/devon/profile_screen.dart';
 
-class Home_screen extends StatefulWidget {
-  const Home_screen({super.key});
+class History_screen extends StatefulWidget {
+  const History_screen({super.key});
 
   @override
-  State<Home_screen> createState() => _Home_screenState();
+  State<History_screen> createState() => _History_screenState();
 }
 
-class _Home_screenState extends State<Home_screen> {
-  int _selectedindex = 1;
+class _History_screenState extends State<History_screen> {
+  int _selectedindex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("Home"),
+        title: Text("History"),
         backgroundColor: Color(0xFFFF9900),
       ),
       body: Center(
-        child: Text('home'),
+        child: Text('History'),
       ),
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.white,
@@ -37,15 +37,15 @@ class _Home_screenState extends State<Home_screen> {
           // _selectedindex = 1;
           //Handle button tap
           if (index == 0) {
+            //           Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => Signup_screen()),
+            // );
+          } else if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => History_screen()),
+              MaterialPageRoute(builder: (context) => Home_screen()),
             );
-          } else if (index == 1) {
-            //         Navigator.push(
-            // context,
-            // MaterialPageRoute(builder: (context) => Home_screen()),
-            // );
           } else {
             Navigator.push(
               context,
