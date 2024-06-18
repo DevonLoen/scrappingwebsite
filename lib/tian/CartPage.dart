@@ -165,7 +165,7 @@ class CartListViewWidget extends StatelessWidget {
                               ),
                               Expanded(
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(cartList[indexItem].itemName),

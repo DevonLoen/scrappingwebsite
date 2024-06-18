@@ -42,7 +42,18 @@ class CartListProvider extends ChangeNotifier {
         itemPrice: 'Rp. 2.100.000',
         itemStore: 'Toko Sepatu')
   ];
-
+  List<ItemCart> CheckedCart = [
+    ItemCart(
+        itemTotal: 1,
+        itemName: "Adidas Samba",
+        itemPrice: 'Rp. 2.100.000',
+        itemStore: 'Toko Sepatu'),
+    ItemCart(
+        itemTotal: 1,
+        itemName: "Adidas Samba",
+        itemPrice: 'Rp. 2.100.000',
+        itemStore: 'Toko Sepatu'),
+  ];
   void addItemTotalValue(CartList, index) {
     CartList[index].itemTotal += 1;
     notifyListeners();
@@ -55,7 +66,13 @@ class CartListProvider extends ChangeNotifier {
   }
 
   void changeItemCheckedValue(CartList, index) {
+    if (CartList[index].checked) {
+      CheckedCart.removeWhere((item) => CartList[index] == item);
+    } else {
+      CheckedCart.add(CartList[index]);
+    }
     CartList[index].checked = !CartList[index].checked;
+    print(CheckedCart);
     notifyListeners();
   }
 }
