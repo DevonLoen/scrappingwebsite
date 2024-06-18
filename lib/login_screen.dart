@@ -1,9 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:scrappingwebsite/home_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:scrappingwebsite/dashboard_screen.dart';
+// import 'package:scrappingwebsite/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:scrappingwebsite/user_provider.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class Login_screen extends StatefulWidget {
   const Login_screen({super.key});
@@ -13,6 +16,7 @@ class Login_screen extends StatefulWidget {
 }
 
 class _Login_screenState extends State<Login_screen> {
+  bool _obscureText = true;
   final _passwordController = TextEditingController();
   final _emailController = TextEditingController();
   String email = '';
@@ -20,14 +24,26 @@ class _Login_screenState extends State<Login_screen> {
 
   bool _isChecked = false;
 
-  bool isUserAuthenticated(List<Item> itemList) {
-    for (var item in itemList) {
-      if (item.email == _emailController.text &&
-          item.password == _passwordController.text) {
-        return true;
+  List<User> isUserAuthenticated(List<User> userList) {
+    List<User> authenticatedUsers = [];
+
+    for (var user in userList) {
+      if (user.email == _emailController.text &&
+          user.password == _passwordController.text) {
+        User loginUser = User(
+          name: user.name,
+          email: user.email,
+          password: "",
+          number: user.number,
+          birth: user.birth.isNotEmpty ? user.birth : "-",
+          address: user.address.isNotEmpty ? user.address : "-",
+          gender: user.gender.isNotEmpty ? user.gender : "-",
+        );
+        authenticatedUsers
+            .add(loginUser); // Autentikasi berhasil, tambahkan user ke list
       }
     }
-    return false;
+    return authenticatedUsers; // Mengembalikan list kosong atau list user yang diautentikasi
   }
 
   void saveData(name, pass) async {
@@ -39,12 +55,12 @@ class _Login_screenState extends State<Login_screen> {
   void getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      email = prefs.getString('email')!;
-      password = prefs.getString('password')!;
+      email = prefs.getString('email') ?? "";
+      password = prefs.getString('password') ?? "";
       _passwordController.text = password;
       _emailController.text = email;
     });
-    // print('Email: $email, Password: $password');
+    // print('email: $email, Password: $password');
   }
 
   @override
@@ -55,8 +71,9 @@ class _Login_screenState extends State<Login_screen> {
 
   @override
   Widget build(BuildContext context) {
-    final itemListProvider = Provider.of<ItemListProvider>(context);
-    final itemList = itemListProvider.items;
+    final userListProvider = Provider.of<UserListProvider>(context);
+    final userList = userListProvider.users;
+
     return Scaffold(
       body: Column(
         children: [
@@ -104,10 +121,14 @@ class _Login_screenState extends State<Login_screen> {
               controller: _emailController,
               decoration: InputDecoration(
                 // labelText: 'Password',
-                hintText: 'Email',
+                hintText: 'email',
                 prefixIcon: Icon(Icons.mail), // Ikon di depan TextField
               ),
               keyboardType: TextInputType.emailAddress,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.singleLineFormatter,
+                // FilteringTextInputFormatter.emailCharactersOnly,
+              ],
             ),
           ),
           SizedBox(
@@ -117,11 +138,18 @@ class _Login_screenState extends State<Login_screen> {
             width: 300,
             child: TextField(
               controller: _passwordController,
-              obscureText: true, // Hide password input
+              obscureText: _obscureText, // Hide password input
               decoration: InputDecoration(
                 // labelText: 'Password',
                 hintText: 'Password',
                 prefixIcon: Icon(Icons.lock), // Ikon di depan TextField
+                suffixIcon: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _obscureText = _obscureText ? false : true;
+                      });
+                    },
+                    child: Icon(Icons.remove_red_eye)),
                 // suffixIcon: Icon(Icons.check),
               ),
             ),
@@ -187,80 +215,110 @@ class _Login_screenState extends State<Login_screen> {
               shadowColor: Colors.black,
             ),
             onPressed: () {
-              if (isUserAuthenticated(itemList)) {
+              List<User> loginUser = isUserAuthenticated(userList);
+              if (loginUser.isNotEmpty) {
                 _isChecked
                     ? saveData(_emailController.text, _passwordController.text)
                     : null;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Home_screen()),
-                );
+                userListProvider.addOnlineUser(loginUser[0]);
+                // print(userListProvider.onlineusers);
+                AwesomeDialog(
+                  context: context,
+                  animType: AnimType.scale,
+                  dialogType: DialogType.success,
+                  body: Center(
+                    child: Text(
+                      'Your Login Is Succeed',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                  title: 'This is Ignored',
+                  desc: 'This is also Ignored',
+                  btnOkOnPress: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Dashboard_screen()),
+                  ),
+                ).show();
               } else {
-                print('login tidak tervalidasi');
+                AwesomeDialog(
+                  context: context,
+                  animType: AnimType.scale,
+                  dialogType: DialogType.error,
+                  body: Center(
+                    child: Text(
+                      'Your Login Is Failed',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                  title: 'This is Ignored',
+                  desc: 'This is also Ignored',
+                  btnOkColor: Colors.red,
+                  btnOkOnPress: () {},
+                ).show();
               }
             },
             child: Text('Log In'),
           ),
-          SizedBox(
-            height: 100,
-          ),
-          Row(
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Divider(
-                  color: Colors.grey,
-                  thickness: 1,
-                  indent: 30,
-                  endIndent: 10, // Jarak antara Divider dan teks
-                ),
-              ),
-              Text(
-                ' Or login with ',
-                style: TextStyle(color: Colors.grey),
-              ),
-              Expanded(
-                child: Divider(
-                  color: Colors.grey,
-                  thickness: 1,
-                  indent: 10, // Jarak antara Divider dan teks
-                  endIndent: 30, // Jarak antara Divider dan teks
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              InkWell(
-                onTap: () {
-                  // Tindakan yang ingin dilakukan saat CircleAvatar diklik
-                  print('CircleAvatar diklik!');
-                },
-                borderRadius: BorderRadius.circular(
-                    5), // Membuat efek ink menyesuaikan bentuk CircleAvatar
-                child: CircleAvatar(
-                    radius: 18, backgroundColor: Colors.blue, child: Text('')),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              InkWell(
-                onTap: () {
-                  // Tindakan yang ingin dilakukan saat CircleAvatar diklik
-                  print('CircleAvatar diklik!');
-                },
-                borderRadius: BorderRadius.circular(
-                    5), // Membuat efek ink menyesuaikan bentuk CircleAvatar
-                child: CircleAvatar(
-                    radius: 18, backgroundColor: Colors.blue, child: Text('')),
-              ),
-            ],
-          )
+          // SizedBox(
+          //   height: 100,
+          // ),
+          // Row(
+          //   // crossAxisAlignment: CrossAxisAlignment.center,
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     Expanded(
+          //       child: Divider(
+          //         color: Colors.grey,
+          //         thickness: 1,
+          //         indent: 30,
+          //         endIndent: 10, // Jarak antara Divider dan teks
+          //       ),
+          //     ),
+          //     Text(
+          //       ' Or login with ',
+          //       style: TextStyle(color: Colors.grey),
+          //     ),
+          //     Expanded(
+          //       child: Divider(
+          //         color: Colors.grey,
+          //         thickness: 1,
+          //         indent: 10, // Jarak antara Divider dan teks
+          //         endIndent: 30, // Jarak antara Divider dan teks
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // SizedBox(
+          //   height: 10,
+          // ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     InkWell(
+          //       onTap: () {
+          //         // Tindakan yang ingin dilakukan saat CircleAvatar diklik
+          //         print('CircleAvatar diklik!');
+          //       },
+          //       borderRadius: BorderRadius.circular(
+          //           5), // Membuat efek ink menyesuaikan bentuk CircleAvatar
+          //       child: CircleAvatar(
+          //           radius: 18, backgroundColor: Colors.blue, child: Text('')),
+          //     ),
+          //     SizedBox(
+          //       width: 10,
+          //     ),
+          //     InkWell(
+          //       onTap: () {
+          //         // Tindakan yang ingin dilakukan saat CircleAvatar diklik
+          //         print('CircleAvatar diklik!');
+          //       },
+          //       borderRadius: BorderRadius.circular(
+          //           5), // Membuat efek ink menyesuaikan bentuk CircleAvatar
+          //       child: CircleAvatar(
+          //           radius: 18, backgroundColor: Colors.blue, child: Text('')),
+          //     ),
+          //   ],
+          // )
         ],
       ),
     );

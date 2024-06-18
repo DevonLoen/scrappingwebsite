@@ -1,25 +1,12 @@
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter/widgets.dart';
-import 'package:scrappingwebsite/home_screen.dart';
-import 'package:scrappingwebsite/profile_screen.dart';
 import 'package:scrappingwebsite/filterpopup.dart';
-import 'package:scrappingwebsite/sortpopup.dart';
 
-class History_screen extends StatefulWidget {
-  const History_screen({super.key});
-
+class Testing extends StatefulWidget {
   @override
-  State<History_screen> createState() => _History_screenState();
+  State<Testing> createState() => _TestingState();
 }
 
-class _History_screenState extends State<History_screen> {
-  int _selectedindex = 0;
-
-  String selectedSort = 'termurah';
-
+class _TestingState extends State<Testing> {
   List<String>? selectedFilters = [
     'selesai',
     'pengiriman',
@@ -32,48 +19,26 @@ class _History_screenState extends State<History_screen> {
 
   List<String> searchhistory = [];
 
-  void sorttermurah(List<Map<String, String>> data) {
-    data.sort((a, b) {
-      // Menghapus 'Rp ' dan mengubah string harga menjadi int untuk perbandingan
-      int priceA =
-          int.parse(a['price']!.replaceAll('Rp ', '').replaceAll('.', ''));
-      int priceB =
-          int.parse(b['price']!.replaceAll('Rp ', '').replaceAll('.', ''));
-      return priceA.compareTo(priceB);
-    });
-  }
-
-  void sorttermahal(List<Map<String, String>> data) {
-    data.sort((a, b) {
-      // Menghapus 'Rp ' dan mengubah string harga menjadi int untuk perbandingan
-      int priceA =
-          int.parse(a['price']!.replaceAll('Rp ', '').replaceAll('.', ''));
-      int priceB =
-          int.parse(b['price']!.replaceAll('Rp ', '').replaceAll('.', ''));
-      return priceB.compareTo(priceA);
-    });
-  }
-
   final List<Map<String, String>> _data = [
     {
       'imageUrl':
           'https://images.tokopedia.net/img/cache/300-square/VqbcmM/2021/8/5/cb0ad05c-9278-49a4-a98a-ea06ad6925b0.png',
       'name': 'Lipstick No 1 indonesia merdeka',
-      'price': 'Rp 900.000',
+      'price': 'Rp 100.000',
       'status': 'selesai',
     },
     {
       'imageUrl':
           'https://images.tokopedia.net/img/cache/300-square/VqbcmM/2023/3/7/92ea7433-d238-4d7b-8823-d1096f79a9d9.png',
       'name': 'Keju Mantap sekali',
-      'price': 'Rp 800.000',
+      'price': 'Rp 200.000',
       'status': 'pengiriman',
     },
     {
       'imageUrl':
           'https://images.tokopedia.net/img/cache/300-square/product-1/2019/7/5/3453155/3453155_b49ba184-3041-444a-8708-ea65fd09ca78_1280_1280',
       'name': 'Baju Buat Lebaran WOW cantik Sekali',
-      'price': 'Rp 500.000',
+      'price': 'Rp 300.000',
       'status': 'tiba',
     },
     {
@@ -87,33 +52,16 @@ class _History_screenState extends State<History_screen> {
       'imageUrl':
           'https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/2/17/9e48a3b6-f313-4dae-8f6e-ffcabbf0e4ba.jpg',
       'name': 'Dokter laser biar kena laser matammu',
-      'price': 'Rp 200.000',
+      'price': 'Rp 400.000',
       'status': 'batal',
     },
   ];
-
-  void mengurutkan() {
-    if (selectedSort == 'termurah') {
-      sorttermurah(_data);
-    } else {
-      sorttermahal(_data);
-    }
-    print('mengurutkan');
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    mengurutkan();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(
-      //   automaticallyImplyLeading: false,
-      //   title: Text("History"),
-      //   backgroundColor: Color(0xFFFF9900),
+      //   title: Text('ListView dengan Kondisi'),
       // ),
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, innerBoxIsScrolled) => [
@@ -370,20 +318,8 @@ class _History_screenState extends State<History_screen> {
                       textStyle: TextStyle(fontSize: 15), // Smaller text
                       minimumSize: Size(70, 25),
                     ),
-                    onPressed: () async {
+                    onPressed: () {
                       // Action when the button is pressed
-                      final String? Sort = await showDialog<String>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return SortPopup(selectedSort: selectedSort);
-                        },
-                      );
-                      if (Sort != null) {
-                        setState(() {
-                          selectedSort = Sort;
-                          mengurutkan();
-                        });
-                      }
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -449,7 +385,6 @@ class _History_screenState extends State<History_screen> {
   }
 }
 
-//##################CLASS#################################
 selesai(BuildContext context, String title, String price, String url) {
   return Container(
     // color: Colors.red,

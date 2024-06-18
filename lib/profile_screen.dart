@@ -1,7 +1,11 @@
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:scrappingwebsite/history_screen.dart';
 import 'package:scrappingwebsite/home_screen.dart';
+
+import 'package:provider/provider.dart';
+import 'package:scrappingwebsite/user_provider.dart';
 
 class Profile_screen extends StatefulWidget {
   const Profile_screen({super.key});
@@ -11,26 +15,28 @@ class Profile_screen extends StatefulWidget {
 }
 
 class _Profile_screenState extends State<Profile_screen> {
-  int _selectedindex = 2;
+  int _selectedindex = 3;
   final _passwordController = TextEditingController();
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final userListProvider = Provider.of<UserListProvider>(context);
+    final userList = userListProvider.onlineusers;
     return Scaffold(
       appBar: AppBar(
         title: Text("Profile"),
         automaticallyImplyLeading: false,
         backgroundColor: Color(0xFFFF9900),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.shopping_cart_outlined),
-            onPressed: () {
-              // Lakukan sesuatu saat ikon diklik
-              print('Ikon diklik');
-            },
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.shopping_cart_outlined),
+          //   onPressed: () {
+          //     // Lakukan sesuatu saat ikon diklik
+          //     print('Ikon diklik');
+          //   },
+          // ),
           PopupMenuButton<String>(
             onSelected: (String value) {
               // Lakukan sesuatu saat item dipilih
@@ -92,7 +98,7 @@ class _Profile_screenState extends State<Profile_screen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'Devon',
+                          userList[0].name,
                           style: TextStyle(
                             fontSize: 17.0,
                             fontWeight: FontWeight.bold,
@@ -101,7 +107,7 @@ class _Profile_screenState extends State<Profile_screen> {
                         ),
                         SizedBox(height: 8.0),
                         Text(
-                          'Devon@gmail.com',
+                          userList[0].email,
                           style: TextStyle(
                             fontSize: 13.0,
                             color: Colors.black,
@@ -137,7 +143,7 @@ class _Profile_screenState extends State<Profile_screen> {
                   ),
                   SizedBox(height: 2.0),
                   Text(
-                    'Komplek Rahayu Resident',
+                    userList[0].address,
                     style: TextStyle(
                       fontSize: 13.0,
                       color: Colors.black,
@@ -172,7 +178,7 @@ class _Profile_screenState extends State<Profile_screen> {
                   ),
                   SizedBox(height: 2.0),
                   Text(
-                    '081265046717',
+                    userList[0].number,
                     style: TextStyle(
                       fontSize: 13.0,
                       color: Colors.black,
@@ -207,7 +213,7 @@ class _Profile_screenState extends State<Profile_screen> {
                   ),
                   SizedBox(height: 2.0),
                   Text(
-                    'Medan, 04 Mei 2004',
+                    userList[0].birth,
                     style: TextStyle(
                       fontSize: 13.0,
                       color: Colors.black,
@@ -242,7 +248,7 @@ class _Profile_screenState extends State<Profile_screen> {
                   ),
                   SizedBox(height: 2.0),
                   Text(
-                    'Laki-Laki',
+                    userList[0].gender,
                     style: TextStyle(
                       fontSize: 13.0,
                       color: Colors.black,
@@ -258,36 +264,6 @@ class _Profile_screenState extends State<Profile_screen> {
             indent: 10,
           ),
         ],
-      ),
-      bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.white,
-        color: Colors.orange,
-        index: _selectedindex,
-        items: <Widget>[
-          Icon(Icons.add, size: 30),
-          Icon(Icons.home_outlined, size: 30),
-          Icon(Icons.person_outline, size: 30),
-        ],
-        onTap: (index) {
-          // _selectedindex = 1;
-
-          if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => History_screen()),
-            );
-          } else if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Home_screen()),
-            );
-          } else {
-            //           Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => Profile_screen()),
-            // );
-          }
-        },
       ),
     );
   }
