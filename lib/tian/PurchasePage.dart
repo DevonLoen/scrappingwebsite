@@ -210,71 +210,160 @@ class CartOrderWidget extends StatelessWidget {
               ),
             ),
             Container(
-              // height: 270,
-              constraints: BoxConstraints(minHeight: 150, maxHeight: 270),
+              width: double.infinity,
+              constraints: BoxConstraints(minHeight: 150),
               padding: EdgeInsets.all(10),
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: cartList.length,
-                  itemBuilder: ((context, indexItem) => Container(
-                        padding: indexItem == 0
-                            ? EdgeInsets.only()
-                            : EdgeInsets.only(top: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border(
-                              bottom: BorderSide(color: Color(0xFFFF9900))),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 1,
-                              offset: Offset(0, 5), // Vertical shadow
-                            )
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Image.asset(cartList[indexItem].image),
+              child: Column(
+                children: [
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: List.generate(
+                          cartList.length,
+                          (indexItem) => Container(
+                                padding: indexItem == 0
+                                    ? EdgeInsets.only()
+                                    : EdgeInsets.only(top: 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border(
+                                      bottom:
+                                          BorderSide(color: Color(0xFFFF9900))),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 1,
+                                      offset: Offset(0, 5), // Vertical shadow
+                                    )
+                                  ],
                                 ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(cartList[indexItem].itemName),
-                                      Text("Size UK 30",
-                                          style: TextStyle(
-                                              color: Color(0xFFFF9900))),
-                                      Text('Color Black Doff',
-                                          style: TextStyle(
-                                              color: Color(0xFFFF9900))),
-                                      Expanded(
-                                        child: Align(
-                                            alignment: Alignment.bottomRight,
-                                            child: Text("RP 25.000.000")),
-                                      )
-                                    ],
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: Container(
+                                    width: 100,
+                                    height: 100,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          child: Image.asset(
+                                              cartList[indexItem].image),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  cartList[indexItem].itemName),
+                                              Text("Size UK 30",
+                                                  style: TextStyle(
+                                                      color:
+                                                          Color(0xFFFF9900))),
+                                              Text('Color Black Doff',
+                                                  style: TextStyle(
+                                                      color:
+                                                          Color(0xFFFF9900))),
+                                              Expanded(
+                                                child: Align(
+                                                    alignment:
+                                                        Alignment.bottomRight,
+                                                    child:
+                                                        Text("RP 25.000.000")),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ],
+                              ))),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border:
+                          Border(bottom: BorderSide(color: Color(0xFFFF9900))),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 1,
+                          offset: Offset(0, 5), // Vertical shadow
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Subtotal Items",
+                              style: TextStyle(fontSize: 14),
                             ),
-                          ),
+                            Text("RP 3.300.000",
+                                style: TextStyle(fontSize: 14)),
+                          ],
                         ),
-                      ))),
-            )
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Delivery Fee",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            Text("RP 30.000", style: TextStyle(fontSize: 14)),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Admin Fee",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            Text("RP 5.000", style: TextStyle(fontSize: 14)),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Subtotal",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        Text(
+                          "RP 3.335.000",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
           ],
         ),
       ),

@@ -53,6 +53,11 @@ class CartListProvider extends ChangeNotifier {
         itemName: "Adidas Samba",
         itemPrice: 'Rp. 2.100.000',
         itemStore: 'Toko Sepatu'),
+    ItemCart(
+        itemTotal: 1,
+        itemName: "Adidas Samba",
+        itemPrice: 'Rp. 2.100.000',
+        itemStore: 'Toko Sepatu'),
   ];
   void addItemTotalValue(CartList, index) {
     CartList[index].itemTotal += 1;
