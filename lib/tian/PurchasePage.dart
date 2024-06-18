@@ -171,7 +171,10 @@ class _PurchasePageState extends State<PurchasePage> {
           CartOrderWidget(
               MarketplaceName: "Order Summary",
               cartList: CheckedCartList,
-              cartListProvider: cartListProvider)
+              cartListProvider: cartListProvider),
+          Container(
+              margin: EdgeInsets.all(10), child: Text('Metode Pembayaran')),
+          Pembayaran_widget(),
         ],
       ),
     );
@@ -366,6 +369,259 @@ class CartOrderWidget extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class Pembayaran_widget extends StatelessWidget {
+  const Pembayaran_widget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+            decoration: BoxDecoration(
+              // color: Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25),
+                  bottomLeft: Radius.circular(25),
+                  bottomRight: Radius.circular(25)),
+              border: Border.all(
+                color: Colors.amber, // Warna border
+                width: 1, // Lebar border
+              ),
+            ),
+            width: 160,
+            height: 190,
+            // color: Colors.amber,
+            child: Column(
+              children: [
+                Text(
+                  'Uang Elektronik',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                InkWell(
+                  onTap: () {
+                    print('ovo');
+                  },
+                  child: Container(
+                    // color: Colors.red,
+                    width: double.infinity,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      // color: Colors.red,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15),
+                      ),
+                      border: Border.all(
+                        color: Colors.amber, // Warna border
+                        width: 1, // Lebar border
+                      ),
+                    ),
+                    margin: EdgeInsets.symmetric(vertical: 5),
+
+                    child: Center(child: Text('ini adalah ovo')),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    print('dana');
+                  },
+                  child: Container(
+                    // color: Colors.red,
+                    width: double.infinity,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      // color: Colors.red,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15),
+                      ),
+                      border: Border.all(
+                        color: Colors.amber, // Warna border
+                        width: 1, // Lebar border
+                      ),
+                    ),
+                    margin: EdgeInsets.symmetric(vertical: 5),
+
+                    child: Center(child: Text('ini adalah dana')),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    print('gopay');
+                  },
+                  child: Container(
+                    // color: Colors.red,
+                    width: double.infinity,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      // color: Colors.red,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15),
+                      ),
+                      border: Border.all(
+                        color: Colors.amber, // Warna border
+                        width: 1, // Lebar border
+                      ),
+                    ),
+                    margin: EdgeInsets.symmetric(vertical: 5),
+
+                    child: Center(child: Text('ini adalah gopay')),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // bank
+          Container(
+            padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+            decoration: BoxDecoration(
+              // color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25),
+                topRight: Radius.circular(25),
+                bottomLeft: Radius.circular(25),
+                bottomRight: Radius.circular(25),
+              ),
+              border: Border.all(
+                color: Colors.amber, // Warna border
+                width: 1, // Lebar border
+              ),
+            ),
+            width: 160,
+            height: 240,
+            // color: Colors.amber,
+            child: Column(
+              children: [
+                Text(
+                  'Bank',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                InkWell(
+                  onTap: () {
+                    print('gopay');
+                  },
+                  child: Container(
+                    // color: Colors.red,
+                    width: double.infinity,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      // color: Colors.red,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15),
+                      ),
+                      border: Border.all(
+                        color: Colors.amber, // Warna border
+                        width: 1, // Lebar border
+                      ),
+                    ),
+                    margin: EdgeInsets.symmetric(vertical: 5),
+
+                    child: Center(child: Text('ini adalah bca')),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    print('bca');
+                  },
+                  child: Container(
+                    // color: Colors.red,
+                    width: double.infinity,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      // color: Colors.red,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15),
+                      ),
+                      border: Border.all(
+                        color: Colors.amber, // Warna border
+                        width: 1, // Lebar border
+                      ),
+                    ),
+                    margin: EdgeInsets.symmetric(vertical: 5),
+
+                    child: Center(child: Text('ini adalah bri')),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    print('bri');
+                  },
+                  child: Container(
+                    // color: Colors.red,
+                    width: double.infinity,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      // color: Colors.red,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15),
+                      ),
+                      border: Border.all(
+                        color: Colors.amber, // Warna border
+                        width: 1, // Lebar border
+                      ),
+                    ),
+                    margin: EdgeInsets.symmetric(vertical: 5),
+
+                    child: Center(child: Text('ini adalah mandiri')),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    print('bni');
+                  },
+                  child: Container(
+                    // color: Colors.red,
+                    width: double.infinity,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      // color: Colors.red,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15),
+                      ),
+                      border: Border.all(
+                        color: Colors.amber, // Warna border
+                        width: 1, // Lebar border
+                      ),
+                    ),
+                    margin: EdgeInsets.symmetric(vertical: 5),
+
+                    child: Center(child: Text('ini adalah bni')),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
