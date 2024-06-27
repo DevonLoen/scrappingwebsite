@@ -330,9 +330,23 @@ class _Signup_screenState extends State<Signup_screen> {
                   gender: "",
                   address: "");
               userListProvider.addUser(newUser);
-
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Login_screen()));
+              AwesomeDialog(
+                context: context,
+                animType: AnimType.scale,
+                dialogType: DialogType.success,
+                body: Center(
+                  child: Text(
+                    'Your SignUp is Succeed',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
+                ),
+                title: 'This is Ignored',
+                desc: 'This is also Ignored',
+                btnOkOnPress: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login_screen()),
+                ),
+              ).show();
             },
             child: Text('Sign Up'),
           ),
