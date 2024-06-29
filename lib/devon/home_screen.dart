@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:scrappingwebsite/devon/history_screen.dart';
 import 'package:scrappingwebsite/devon/profile_screen.dart';
+import 'package:scrappingwebsite/devon/user_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home_screen extends StatefulWidget {
   const Home_screen({super.key});
@@ -12,8 +14,20 @@ class Home_screen extends StatefulWidget {
 
 class _Home_screenState extends State<Home_screen> {
   int _selectedindex = 2;
-
+  late SharedPreferences prefs;
   final TextEditingController _searchcontroller = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initializeSharedPreferences();
+  }
+
+  Future<void> initializeSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    // Now you can use prefs throughout your widget!
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -360,7 +374,17 @@ class _Home_screenState extends State<Home_screen> {
                 minimumSize: Size(200, 45),
                 shadowColor: Colors.black,
               ),
-              onPressed: () {},
+              onPressed: () async {
+                try {
+                  await searchData();
+                } catch (e) {
+                  prefs.clear();
+                  print('prefs.getString("token") in searchdata error');
+                  print(prefs.getString("token"));
+                  Navigator.popUntil(context, ModalRoute.withName('/'));
+                  setState(() => {});
+                }
+              },
               child: Text('Find Out'),
             ),
           ),

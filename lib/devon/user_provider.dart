@@ -102,10 +102,7 @@ class Auth extends ChangeNotifier {
           ),
           title: 'This is Ignored',
           desc: 'This is also Ignored',
-          btnOkOnPress: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Dashboard_screen()),
-          ),
+          btnOkOnPress: () => Navigator.pushNamed(context, "/HomeScreen"),
         ).show();
         // Navigator.push(
         //     context, MaterialPageRoute(builder: ((context) => Home_screen())));
@@ -116,5 +113,22 @@ class Auth extends ChangeNotifier {
     } catch (e) {
       rethrow;
     }
+  }
+}
+
+Future<void> searchData() async {
+  final prefs = await SharedPreferences.getInstance();
+  try {
+    if (!prefs.containsKey('token')) {
+      throw Exception("Please Logged in again");
+    }
+    ;
+    final response = await http.get(
+        Uri.parse("http://localhost:3000/api/v1/scrapping?search=panci"),
+        headers: <String, String>{"Authorization": prefs.getString('token')!});
+    print('response search');
+    print(response.body);
+  } catch (e) {
+    rethrow;
   }
 }

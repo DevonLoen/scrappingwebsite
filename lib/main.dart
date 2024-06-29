@@ -14,6 +14,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final bool isLoggedIn = prefs.containsKey("token");
+  print('prefs.getString("token")');
+  print(prefs.getString("token"));
   print('isLoggedIn ATAS');
   print(isLoggedIn);
   runApp(MyApp(
@@ -33,13 +35,19 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => Auth())
       ],
       child: MaterialApp(
+          initialRoute: this.isLoggedIn ? "/HomeScreen" : "/",
+          routes: {
+            '/': (context) => Login_screen(),
+            '/HomeScreen': (context) => Home_screen(),
+          },
           debugShowCheckedModeBanner: false,
           title: 'Scraping data website',
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
             useMaterial3: true,
-          ),
-          home: this.isLoggedIn ? Home_screen() : Login_screen()),
+          )),
+      // home: this.isLoggedIn ? Home_screen() : Login_screen()),
+      // home: Testing()),
     );
   }
 }
