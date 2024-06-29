@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scrappingwebsite/history_screen.dart';
 import 'package:scrappingwebsite/home_screen.dart';
+import 'package:scrappingwebsite/item_screen.dart';
 import 'package:scrappingwebsite/login_screen.dart';
 import 'package:scrappingwebsite/profile_screen.dart';
 import 'package:scrappingwebsite/testing.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
           useMaterial3: true,
         ),
-        home: Welcome_screen(),
+        home: Item_Screen(),
       ),
     );
   }
