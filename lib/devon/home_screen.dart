@@ -11,48 +11,360 @@ class Home_screen extends StatefulWidget {
 }
 
 class _Home_screenState extends State<Home_screen> {
-  int _selectedindex = 1;
+  int _selectedindex = 2;
+
+  final TextEditingController _searchcontroller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text("Home"),
-        backgroundColor: Color(0xFFFF9900),
-      ),
-      body: Center(
-        child: Text('home'),
-      ),
-      bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.white,
-        color: Color(0xFFFF9900),
-        index: _selectedindex,
-        items: <Widget>[
-          Icon(Icons.add, size: 30),
-          Icon(Icons.home_outlined, size: 30),
-          Icon(Icons.person_outline, size: 30),
+      body: Column(
+        // mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            // color: Colors.blue,
+            decoration: BoxDecoration(
+              color: Color(0xFFFF9900),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(0),
+                topRight: Radius.circular(0),
+                bottomLeft: Radius.circular(0),
+                bottomRight: Radius.circular(150),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0xFFFFB03A), // Warna bayangan
+                  spreadRadius: 15, // Jangkauan bayangan
+                  // blurRadius: 10, // Jarak blur bayangan
+                  // offset: Offset(4, 4), // Offset bayangan (x, y)
+                ),
+              ],
+            ),
+            width: double.infinity,
+            height: 130.0,
+            child: Text(''),
+          ),
+          SizedBox(
+            height: 35.0,
+          ),
+          Center(
+            child: Text(
+              'Find Out Your Item Here',
+              style: TextStyle(
+                fontSize: 25, // Ukuran font
+                // fontStyle: FontStyle.italic, // Gaya font (miring)
+                fontWeight: FontWeight.bold, // Berat font (tebal)
+                color: Colors.black,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 30.0,
+          ),
+          Center(
+            child: Container(
+              // decoration: BoxDecoration(
+              //     border: Border.all(color: Colors.blue, width: 2)),
+              width: 300.0,
+              height: 45.0,
+              child: TextField(
+                controller: _searchcontroller,
+                decoration: InputDecoration(
+                  hintText: 'Search Here...',
+                  border: OutlineInputBorder(
+                    borderRadius:
+                        BorderRadius.circular(20.0), // Menambahkan radius
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    borderSide: BorderSide(
+                      color: Colors.orange,
+                      width: 3, // Warna border saat TextField tidak dipilih
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                      width: 3, // Warna border saat TextField dipilih
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Row(
+            children: [
+              SizedBox(
+                width: 37.0,
+              ),
+              Text(
+                'Recommendation',
+                style: TextStyle(color: Colors.orange),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ChoiceChip(
+                side: BorderSide(color: Colors.orange),
+                label: Text(
+                  "Shirt",
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.orange,
+                      fontWeight: FontWeight.normal),
+                ),
+                selected:
+                    "no" == _searchcontroller.text, //checklist pada choice chip
+                labelPadding:
+                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(24.0), // Menambahkan radius
+                ),
+                onSelected: (value) {
+                  setState(() {
+                    _searchcontroller.text = "Shirt";
+                    // controller.closeView("Testing");
+                  });
+                },
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              ChoiceChip(
+                side: BorderSide(color: Colors.orange),
+                label: Text(
+                  "Gaming Laptop",
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.orange,
+                      fontWeight: FontWeight.normal),
+                ),
+                selected:
+                    "no" == _searchcontroller.text, //checklist pada choice chip
+                labelPadding:
+                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(24.0), // Menambahkan radius
+                ),
+                onSelected: (value) {
+                  setState(() {
+                    _searchcontroller.text = "Gaming Laptop";
+                    // controller.closeView("Testing");
+                  });
+                },
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              ChoiceChip(
+                side: BorderSide(color: Colors.orange),
+                label: Text(
+                  "PC",
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.orange,
+                      fontWeight: FontWeight.normal),
+                ),
+                selected:
+                    "no" == _searchcontroller.text, //checklist pada choice chip
+                labelPadding:
+                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(24.0), // Menambahkan radius
+                ),
+                onSelected: (value) {
+                  setState(() {
+                    _searchcontroller.text = "PC";
+                    // controller.closeView("Testing");
+                  });
+                },
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ChoiceChip(
+                side: BorderSide(color: Colors.orange),
+                label: Text(
+                  "Keyboard Gaming",
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.orange,
+                      fontWeight: FontWeight.normal),
+                ),
+                selected:
+                    "no" == _searchcontroller.text, //checklist pada choice chip
+                labelPadding:
+                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(24.0), // Menambahkan radius
+                ),
+                onSelected: (value) {
+                  setState(() {
+                    _searchcontroller.text = "Keyboard Gaming";
+                    // controller.closeView("Testing");
+                  });
+                },
+              ),
+              SizedBox(
+                width: 35,
+              ),
+              ChoiceChip(
+                side: BorderSide(color: Colors.orange),
+                label: Text(
+                  "Mouse",
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.orange,
+                      fontWeight: FontWeight.normal),
+                ),
+                selected:
+                    "no" == _searchcontroller.text, //checklist pada choice chip
+                labelPadding:
+                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(24.0), // Menambahkan radius
+                ),
+                onSelected: (value) {
+                  setState(() {
+                    _searchcontroller.text = "Mouse";
+                    // controller.closeView("Testing");
+                  });
+                },
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ChoiceChip(
+                side: BorderSide(color: Colors.orange),
+                label: Text(
+                  "ID",
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.orange,
+                      fontWeight: FontWeight.normal),
+                ),
+                selected:
+                    "no" == _searchcontroller.text, //checklist pada choice chip
+                labelPadding:
+                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(24.0), // Menambahkan radius
+                ),
+                onSelected: (value) {
+                  setState(() {
+                    _searchcontroller.text = "ID";
+                    // controller.closeView("Testing");
+                  });
+                },
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              ChoiceChip(
+                side: BorderSide(color: Colors.orange),
+                label: Text(
+                  "Jeans",
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.orange,
+                      fontWeight: FontWeight.normal),
+                ),
+                selected:
+                    "no" == _searchcontroller.text, //checklist pada choice chip
+                labelPadding:
+                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(24.0), // Menambahkan radius
+                ),
+                onSelected: (value) {
+                  setState(() {
+                    _searchcontroller.text = "Jeans";
+                    // controller.closeView("Testing");
+                  });
+                },
+              ),
+              SizedBox(
+                width: 18,
+              ),
+              ChoiceChip(
+                side: BorderSide(color: Colors.orange),
+                label: Text(
+                  "Voucher BBM",
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.orange,
+                      fontWeight: FontWeight.normal),
+                ),
+                selected:
+                    "no" == _searchcontroller.text, //checklist pada choice chip
+                labelPadding:
+                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(24.0), // Menambahkan radius
+                ),
+                onSelected: (value) {
+                  setState(() {
+                    _searchcontroller.text = "Voucher BBM";
+                    // controller.closeView("Testing");
+                  });
+                },
+              ),
+            ],
+          ),
+          //#####################SEARCH ANCHOR #################################,
+          SizedBox(
+            height: 50,
+          ),
+
+          Center(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Color(0xFFCACACA),
+                backgroundColor: Colors.orange,
+                elevation: 30,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(27.10)),
+                minimumSize: Size(200, 45),
+                shadowColor: Colors.black,
+              ),
+              onPressed: () {},
+              child: Text('Find Out'),
+            ),
+          ),
         ],
-        onTap: (index) {
-          // _selectedindex = 1;
-          //Handle button tap
-          if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => History_screen()),
-            );
-          } else if (index == 1) {
-            //         Navigator.push(
-            // context,
-            // MaterialPageRoute(builder: (context) => Home_screen()),
-            // );
-          } else {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Profile_screen()),
-            );
-          }
-        },
       ),
     );
   }

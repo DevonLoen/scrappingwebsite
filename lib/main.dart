@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scrappingwebsite/devon/history_screen.dart';
 import 'package:scrappingwebsite/devon/home_screen.dart';
 import 'package:scrappingwebsite/devon/login_screen.dart';
 import 'package:scrappingwebsite/devon/profile_screen.dart';
-import 'package:scrappingwebsite/devon/welcome_screen.dart';
-import 'package:provider/provider.dart';
 import 'package:scrappingwebsite/devon/user_provider.dart';
-import 'package:scrappingwebsite/tian/CartPage.dart';
-import 'package:scrappingwebsite/tian/PurchasePage.dart';
+import 'package:scrappingwebsite/testing.dart';
+import 'package:scrappingwebsite/devon/welcome_screen.dart';
 import 'package:scrappingwebsite/tian/cartListProvider.dart';
-import 'package:scrappingwebsite/tian/detailPageScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {

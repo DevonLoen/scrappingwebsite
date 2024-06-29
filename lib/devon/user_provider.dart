@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:scrappingwebsite/dashboard_screen.dart';
 import 'package:scrappingwebsite/devon/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -88,8 +90,25 @@ class Auth extends ChangeNotifier {
         _tempidToken = jsonDecode(response.body)['token'];
         print('_tempidToken tdi bawah');
         print(_tempidToken);
-        Navigator.push(
-            context, MaterialPageRoute(builder: ((context) => Home_screen())));
+        AwesomeDialog(
+          context: context,
+          animType: AnimType.scale,
+          dialogType: DialogType.success,
+          body: Center(
+            child: Text(
+              'Your Login Is Succeed',
+              style: TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ),
+          title: 'This is Ignored',
+          desc: 'This is also Ignored',
+          btnOkOnPress: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Dashboard_screen()),
+          ),
+        ).show();
+        // Navigator.push(
+        //     context, MaterialPageRoute(builder: ((context) => Home_screen())));
         return true;
       } else {
         throw (jsonDecode(response.body)['message']);

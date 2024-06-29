@@ -1,6 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+// import 'package:project/Devon/providers.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:scrappingwebsite/devon/login_screen.dart';
+
+// import 'package:scrappingwebsite/login_screen.dart';
 import 'package:scrappingwebsite/devon/user_provider.dart';
 
 class Signup_screen extends StatefulWidget {
@@ -11,15 +18,27 @@ class Signup_screen extends StatefulWidget {
 }
 
 class _Signup_screenState extends State<Signup_screen> {
+  bool _obscureTextpwd = true;
+  bool _obscureTextcnfrmpwd = true;
+
   final _passwordController = TextEditingController();
+  final _confirmpasswordController = TextEditingController();
+
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _numberController = TextEditingController();
+  String dropdown = "";
 
   @override
   Widget build(BuildContext context) {
     final userListProvider = Provider.of<UserListProvider>(context);
     final itemList = userListProvider.Users;
+
     return Scaffold(
+      appBar: AppBar(
+        title: Text(''),
+        backgroundColor: Color(0xFFFF9900),
+      ),
       body: Column(
         children: [
           Container(
@@ -42,7 +61,7 @@ class _Signup_screenState extends State<Signup_screen> {
               ],
             ),
             width: double.infinity,
-            height: 180.0,
+            height: 40,
             child: Text(''),
           ),
           SizedBox(
@@ -80,10 +99,106 @@ class _Signup_screenState extends State<Signup_screen> {
               controller: _emailController,
               decoration: InputDecoration(
                 // labelText: 'Password',
-                hintText: 'Email',
+                hintText: 'email',
                 prefixIcon: Icon(Icons.mail), // Ikon di depan TextField
               ),
               keyboardType: TextInputType.emailAddress,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.singleLineFormatter,
+                // FilteringTextInputFormatter.emailCharactersOnly,
+              ],
+            ),
+          ),
+          // SizedBox(
+          //   height: 25,
+          // ),
+          // Container(
+          //   width: 300,
+          //   child: TextField(
+          //     controller: _roleController,
+          //     decoration: InputDecoration(
+          //       // labelText: 'Password',
+          //       hintText: 'Role',
+          //       prefixIcon:
+          //           Icon(Icons.business_center), // Ikon di depan TextField
+          //     ),
+          //   ),
+          // ),
+//           Container(
+//             width: 310,
+//             height: 55,
+//             // padding: EdgeInsets.all(0),
+
+//             // color: Colors.red,
+//             child: DropdownButton<String>(
+//               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+
+//               value: dropdownValue,
+//               hint: Row(
+//                 children: [
+//                   SizedBox(
+//                     width: 3,
+//                   ),
+//                   Icon(Icons.business_center,
+//                       color: Colors.black), // Icon di sebelah kiri hint text
+//                   SizedBox(width: 10),
+//                   // Spasi antara ikon dan teks
+//                   dropdown.isEmpty
+//                       ? Text(
+//                           'Select a Role',
+//                           style: TextStyle(
+//                             color: Colors.grey[600],
+//                             fontWeight: FontWeight.w500,
+//                           ),
+//                         )
+//                       : Text(dropdown)
+//                 ],
+//               ), // Hint text
+//               icon: dropdown.isEmpty
+//                   ? Icon(Icons.arrow_drop_down, color: Colors.black)
+//                   : Icon(Icons.arrow_drop_down, color: Colors.white),
+// // Icon di sebelah kanan
+//               iconSize: 24,
+//               elevation: 16,
+//               style: TextStyle(color: Colors.black, fontSize: 16),
+//               underline: Container(
+//                 height: 1,
+//                 color: Colors.black,
+//               ),
+//               onChanged: (String? newValue) {
+//                 setState(() {
+//                   dropdownValue = newValue!;
+//                   dropdown = newValue!;
+//                 });
+//                 print(newValue);
+//               },
+//               items: <String>['Manager', 'Karyawan', 'Babu', 'Christian']
+//                   .map<DropdownMenuItem<String>>((String value) {
+//                 return DropdownMenuItem<String>(
+//                   value: value,
+//                   child: Text(value),
+//                 );
+//               }).toList(),
+//             ),
+//           ),
+          SizedBox(
+            height: 15,
+          ),
+          Container(
+            width: 300,
+            child: TextField(
+              controller: _numberController,
+              // obscureText: true, // Hide password input
+              decoration: InputDecoration(
+                // labelText: 'Password',
+                hintText: 'Number',
+                prefixIcon: Icon(Icons.phone), // Ikon di depan TextField
+                // suffixIcon: Icon(Icons.check),
+              ),
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly,
+              ],
             ),
           ),
           SizedBox(
@@ -93,12 +208,43 @@ class _Signup_screenState extends State<Signup_screen> {
             width: 300,
             child: TextField(
               controller: _passwordController,
-              obscureText: true, // Hide password input
+              obscureText: _obscureTextpwd, // Hide password input
               decoration: InputDecoration(
                 // labelText: 'Password',
                 hintText: 'Password',
                 prefixIcon: Icon(Icons.lock), // Ikon di depan TextField
+                suffixIcon: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _obscureTextpwd = _obscureTextpwd ? false : true;
+                      });
+                    },
+                    child: Icon(Icons.remove_red_eye)),
                 // suffixIcon: Icon(Icons.check),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 25,
+          ),
+          Container(
+            width: 300,
+            child: TextField(
+              controller: _confirmpasswordController,
+              obscureText: _obscureTextcnfrmpwd, // Hide password input
+              decoration: InputDecoration(
+                // labelText: 'Password',
+                hintText: 'Confirm Password',
+                prefixIcon: Icon(Icons.lock), // Ikon di depan TextField
+                // suffixIcon: Icon(Icons.check),
+                suffixIcon: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _obscureTextcnfrmpwd =
+                            _obscureTextcnfrmpwd ? false : true;
+                      });
+                    },
+                    child: Icon(Icons.remove_red_eye)),
               ),
             ),
           ),
@@ -116,83 +262,153 @@ class _Signup_screenState extends State<Signup_screen> {
               shadowColor: Colors.black,
             ),
             onPressed: () {
-              User newItem = User(
-                  first_name: 'first_name',
-                  last_name: "last_name",
-                  email: "email",
-                  password: "password",
-                  address: 'address',
-                  phone_number: 081360441400,
-                  role: Role.admin);
-              userListProvider.addUser(newItem);
+              if (_usernameController.text.isEmpty ||
+                  _emailController.text.isEmpty ||
+                  _numberController.text.isEmpty ||
+                  _passwordController.text.isEmpty) {
+                // Show dialog for empty username
+                String errorMessage = "";
+                if (_usernameController.text.isEmpty) {
+                  errorMessage = 'Username is required.';
+                } else if (_emailController.text.isEmpty) {
+                  errorMessage = 'email is required.';
+                  // } else if (dropdown.isEmpty) {
+                  //   errorMessage = 'Role is required.';
+                } else if (_numberController.text.isEmpty) {
+                  errorMessage = 'Number is required.';
+                } else if (_passwordController.text.isEmpty) {
+                  errorMessage = 'Password is required.';
+                }
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Login_screen()),
-              );
+                AwesomeDialog(
+                  context: context,
+                  animType: AnimType.scale,
+                  dialogType: DialogType.error,
+                  body: Center(
+                    child: Text(
+                      errorMessage,
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                  title: 'This is Ignored',
+                  desc: 'This is also Ignored',
+                  btnOkColor: Colors.red,
+                  btnOkOnPress: () {},
+                ).show();
+
+                return;
+              }
+
+              if (_passwordController.text != _confirmpasswordController.text) {
+                AwesomeDialog(
+                  context: context,
+                  animType: AnimType.scale,
+                  dialogType: DialogType.error,
+                  body: Center(
+                    child: Text(
+                      'Confirm Password Is Incorrect',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                  title: 'This is Ignored',
+                  desc: 'This is also Ignored',
+                  btnOkColor: Colors.red,
+                  btnOkOnPress: () {},
+                ).show();
+                return;
+              }
+              print('ok');
+              User newUser = User(
+                  first_name: _usernameController.text,
+                  email: _emailController.text,
+                  password: _passwordController.text,
+                  phone_number: int.parse(_numberController.text),
+                  // birth: "",
+                  // gender: "",
+                  role: "client",
+                  last_name: "devon",
+                  address: "");
+              userListProvider.addUser(newUser);
+              AwesomeDialog(
+                context: context,
+                animType: AnimType.scale,
+                dialogType: DialogType.success,
+                body: Center(
+                  child: Text(
+                    'Your SignUp is Succeed',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
+                ),
+                title: 'This is Ignored',
+                desc: 'This is also Ignored',
+                btnOkOnPress: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login_screen()),
+                ),
+              ).show();
             },
             child: Text('Sign Up'),
           ),
-          SizedBox(
-            height: 100,
-          ),
-          Row(
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Divider(
-                  color: Colors.grey,
-                  thickness: 1,
-                  indent: 30,
-                  endIndent: 10, // Jarak antara Divider dan teks
-                ),
-              ),
-              Text(
-                ' Or signup with ',
-                style: TextStyle(color: Colors.grey),
-              ),
-              Expanded(
-                child: Divider(
-                  color: Colors.grey,
-                  thickness: 1,
-                  indent: 10, // Jarak antara Divider dan teks
-                  endIndent: 30, // Jarak antara Divider dan teks
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              InkWell(
-                onTap: () {
-                  // Tindakan yang ingin dilakukan saat CircleAvatar diklik
-                  print('CircleAvatar diklik!');
-                },
-                borderRadius: BorderRadius.circular(
-                    5), // Membuat efek ink menyesuaikan bentuk CircleAvatar
-                child: CircleAvatar(
-                    radius: 18, backgroundColor: Colors.blue, child: Text('')),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              InkWell(
-                onTap: () {
-                  // Tindakan yang ingin dilakukan saat CircleAvatar diklik
-                  print('CircleAvatar diklik!');
-                },
-                borderRadius: BorderRadius.circular(
-                    5), // Membuat efek ink menyesuaikan bentuk CircleAvatar
-                child: CircleAvatar(
-                    radius: 18, backgroundColor: Colors.blue, child: Text('')),
-              ),
-            ],
-          )
+          // SizedBox(
+          //   height: 100,
+          // ),
+          // Row(
+          //   // crossAxisAlignment: CrossAxisAlignment.center,
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     Expanded(
+          //       child: Divider(
+          //         color: Colors.grey,
+          //         thickness: 1,
+          //         indent: 30,
+          //         endIndent: 10, // Jarak antara Divider dan teks
+          //       ),
+          //     ),
+          //     Text(
+          //       ' Or signup with ',
+          //       style: TextStyle(color: Colors.grey),
+          //     ),
+          //     Expanded(
+          //       child: Divider(
+          //         color: Colors.grey,
+          //         thickness: 1,
+          //         indent: 10, // Jarak antara Divider dan teks
+          //         endIndent: 30, // Jarak antara Divider dan teks
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // SizedBox(
+          //   height: 10,
+          // ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     InkWell(
+          //       onTap: () {
+          //         // Tindakan yang ingin dilakukan saat CircleAvatar diklik
+          //         print('CircleAvatar diklik!');
+          //       },
+          //       borderRadius: BorderRadius.circular(
+          //           5), // Membuat efek ink menyesuaikan bentuk CircleAvatar
+          //       child: CircleAvatar(
+          //           radius: 18, backgroundColor: Colors.blue, child: Text('')),
+          //     ),
+          //     SizedBox(
+          //       width: 10,
+          //     ),
+          //     InkWell(
+          //       onTap: () {
+          //         // Tindakan yang ingin dilakukan saat CircleAvatar diklik
+          //         print('CircleAvatar diklik!');
+          //       },
+          //       borderRadius: BorderRadius.circular(
+          //           5), // Membuat efek ink menyesuaikan bentuk CircleAvatar
+          //       child: CircleAvatar(
+          //           radius: 18, backgroundColor: Colors.blue, child: Text('')),
+          //     ),
+          //   ],
+          // )
         ],
       ),
     );

@@ -37,6 +37,8 @@ dependencies:
   provider: ^6.1.2
   shared_preferences: ^2.2.3
   curved_navigation_bar: ^1.0.4
+  convex_bottom_bar: ^3.2.0
+  awesome_dialog: ^3.2.1
 
 dev_dependencies:
   flutter_test:
