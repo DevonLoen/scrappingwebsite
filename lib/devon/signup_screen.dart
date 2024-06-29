@@ -117,9 +117,13 @@ class _Signup_screenState extends State<Signup_screen> {
             ),
             onPressed: () {
               User newItem = User(
-                  name: 'John Doe',
-                  email: 'john@example.com',
-                  password: '123456');
+                  first_name: 'first_name',
+                  last_name: "last_name",
+                  email: "email",
+                  password: "password",
+                  address: 'address',
+                  phone_number: 081360441400,
+                  role: Role.admin);
               userListProvider.addUser(newItem);
 
               Navigator.push(

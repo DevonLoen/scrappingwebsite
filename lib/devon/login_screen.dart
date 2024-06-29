@@ -1,5 +1,8 @@
-import 'dart:ui';
+import 'dart:convert';
+import "package:http/http.dart" as http;
 import 'package:flutter/material.dart';
+import 'package:scrappingwebsite/APIFunction/function.dart';
+import 'dart:ui';
 import 'package:scrappingwebsite/devon/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
@@ -186,18 +189,20 @@ class _Login_screenState extends State<Login_screen> {
               minimumSize: Size(200, 45),
               shadowColor: Colors.black,
             ),
-            onPressed: () {
-              if (isUserAuthenticated(itemList)) {
-                _isChecked
-                    ? saveData(_emailController.text, _passwordController.text)
-                    : null;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Home_screen()),
+            onPressed: () async {
+              try {
+                await Provider.of<Auth>(context, listen: false).login(
+                    _emailController.text, _passwordController.text, context);
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(e.toString()),
+                  ),
                 );
-              } else {
-                print('login tidak tervalidasi');
               }
+              _isChecked
+                  ? saveData(_emailController.text, _passwordController.text)
+                  : null;
             },
             child: Text('Log In'),
           ),
