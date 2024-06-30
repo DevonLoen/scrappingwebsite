@@ -261,7 +261,7 @@ class _Signup_screenState extends State<Signup_screen> {
               minimumSize: Size(200, 45),
               shadowColor: Colors.black,
             ),
-            onPressed: () {
+            onPressed: () async {
               if (_usernameController.text.isEmpty ||
                   _emailController.text.isEmpty ||
                   _numberController.text.isEmpty ||
@@ -318,34 +318,30 @@ class _Signup_screenState extends State<Signup_screen> {
                 return;
               }
               print('ok');
-              User newUser = User(
-                  first_name: _usernameController.text,
-                  email: _emailController.text,
-                  password: _passwordController.text,
-                  phone_number: int.parse(_numberController.text),
-                  // birth: "",
-                  // gender: "",
-                  role: "client",
-                  last_name: "devon",
-                  address: "");
-              userListProvider.addUser(newUser);
-              AwesomeDialog(
-                context: context,
-                animType: AnimType.scale,
-                dialogType: DialogType.success,
-                body: Center(
-                  child: Text(
-                    'Your SignUp is Succeed',
-                    style: TextStyle(fontStyle: FontStyle.italic),
+              try {
+                await Provider.of<Auth>(context, listen: false).signup(
+                    _emailController.text,
+                    _passwordController.text,
+                    _usernameController.text,
+                    '',
+                    context);
+              } catch (e) {
+                AwesomeDialog(
+                  context: context,
+                  animType: AnimType.scale,
+                  dialogType: DialogType.error,
+                  body: Center(
+                    child: Text(
+                      'Your SignUp Is Failed',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
                   ),
-                ),
-                title: 'This is Ignored',
-                desc: 'This is also Ignored',
-                btnOkOnPress: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Login_screen()),
-                ),
-              ).show();
+                  title: 'This is Ignored',
+                  desc: 'This is also Ignored',
+                  btnOkColor: Colors.red,
+                  btnOkOnPress: () {},
+                ).show();
+              }
             },
             child: Text('Sign Up'),
           ),

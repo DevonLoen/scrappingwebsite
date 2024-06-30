@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrappingwebsite/dashboard_screen.dart';
 import 'package:scrappingwebsite/devon/home_screen.dart';
+import 'package:scrappingwebsite/devon/login_screen.dart';
 import 'package:scrappingwebsite/tian/cartListProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -104,6 +105,64 @@ class Auth extends ChangeNotifier {
           title: 'This is Ignored',
           desc: 'This is also Ignored',
           btnOkOnPress: () => Navigator.pushNamed(context, "/HomeScreen"),
+        ).show();
+        // Navigator.push(
+        //     context, MaterialPageRoute(builder: ((context) => Home_screen())));
+        return true;
+      } else {
+        throw (jsonDecode(response.body)['message']);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> signup(String email, String password, String first_name,
+      String last_name, BuildContext context) async {
+    UserListProvider userListProvider =
+        Provider.of<UserListProvider>(context, listen: false);
+    final prefs = await SharedPreferences.getInstance();
+    try {
+      final response = await http.post(
+          Uri.parse("http://localhost:3000/api/v1/users/register"),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(<String, String>{
+            "email": email,
+            "password": password,
+            "first_name": first_name,
+            "last_name": last_name
+          }));
+      if (response.statusCode == 200) {
+        User newUser = User(
+            first_name: first_name,
+            email: email,
+            password: password,
+            phone_number: 081375440029,
+            // birth: "",
+            // gender: "",
+            role: "client",
+            last_name: "devon",
+            address: "");
+        userListProvider.addUser(newUser);
+
+        AwesomeDialog(
+          context: context,
+          animType: AnimType.scale,
+          dialogType: DialogType.success,
+          body: Center(
+            child: Text(
+              'Your Sign Up Is Succeed',
+              style: TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ),
+          title: 'This is Ignored',
+          desc: 'This is also Ignored',
+          btnOkOnPress: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Login_screen()),
+          ),
         ).show();
         // Navigator.push(
         //     context, MaterialPageRoute(builder: ((context) => Home_screen())));
