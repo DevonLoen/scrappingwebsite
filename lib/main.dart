@@ -3,6 +3,7 @@ import 'package:scrappingwebsite/history_screen.dart';
 import 'package:scrappingwebsite/home_screen.dart';
 import 'package:scrappingwebsite/item_screen.dart';
 import 'package:scrappingwebsite/login_screen.dart';
+import 'package:scrappingwebsite/pembayaran_popup.dart';
 import 'package:scrappingwebsite/profile_screen.dart';
 import 'package:scrappingwebsite/testing.dart';
 import 'package:scrappingwebsite/welcome_screen.dart';
@@ -25,7 +26,12 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
           useMaterial3: true,
         ),
-        home: Item_Screen(),
+        home: Pembayaran_popup(
+            name: 'DEVddddddddddddddddddddddddddON',
+            number: '01341343',
+            rekening: '12324423',
+            item: 'Nike black panda',
+            total: '3.125.000'),
       ),
     );
   }
