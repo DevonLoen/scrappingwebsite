@@ -377,7 +377,7 @@ class _Home_screenState extends State<Home_screen> {
               onPressed: () async {
                 try {
                   print("ini searchingg");
-                  final response = await searchData();
+                  final response = await searchData(_searchcontroller.text);
                   print('response searchh');
                   print(response.runtimeType);
                   Navigator.pushNamed(context, '/itemsResult',

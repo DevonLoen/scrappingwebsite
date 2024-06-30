@@ -279,13 +279,10 @@ class CartOrderWidget extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(cartList[indexItem].itemName),
-                                        Text("Size UK 30",
-                                            style: TextStyle(
-                                                color: Color(0xFFFF9900))),
-                                        Text('Color Black Doff',
-                                            style: TextStyle(
-                                                color: Color(0xFFFF9900))),
+                                        Text(
+                                          cartList[indexItem].itemName,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                         Expanded(
                                           child: Align(
                                               alignment: Alignment.bottomRight,

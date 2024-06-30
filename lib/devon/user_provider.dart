@@ -176,7 +176,8 @@ class Auth extends ChangeNotifier {
   }
 }
 
-Future<Map<String, List<Map<String, dynamic>>>> searchData() async {
+Future<Map<String, List<Map<String, dynamic>>>> searchData(
+    String userSearch) async {
   final prefs = await SharedPreferences.getInstance();
   print("aseasdcasdc");
   try {
@@ -184,24 +185,44 @@ Future<Map<String, List<Map<String, dynamic>>>> searchData() async {
       throw Exception("Please Logged in again");
     }
     ;
-    final response = await http.get(
-        Uri.parse("http://localhost:3000/api/v1/scrapping?search=panci"),
+    print('userSearch');
+    print(userSearch);
+    Uri url = Uri.parse(
+        'http://localhost:3000/api/v1/scrapping?search=' + userSearch);
+    print(url);
+    final response = await http.get(url,
         headers: <String, String>{"Authorization": prefs.getString('token')!});
+    print(response.body);
     if (jsonDecode(response.body)['error'] != null) {
       prefs.clear();
       throw Exception("please log in again");
     }
     Map<String, List<Map<String, dynamic>>> searchResult = {};
-    final List<dynamic> jsonResponseBukalapak =
+    List<Map<String, dynamic>> searchResultTokopedia = [];
+    List<Map<String, dynamic>> searchResultBukalapak = [];
+
+    final jsonDecodeBukalapak =
         jsonDecode(response.body)['data']['scrapeBukalapak'];
-    final List<Map<String, dynamic>> searchResultBukalapak =
-        List<Map<String, dynamic>>.from(
-            jsonResponseBukalapak.map((value) => value));
-    final List<dynamic> jsonResponseTokopedia =
+    print('jsonDecodeBukalapak');
+    print(jsonDecodeBukalapak);
+    if (jsonDecodeBukalapak != null) {
+      final List<dynamic> jsonResponseBukalapak = jsonDecodeBukalapak;
+
+      searchResultBukalapak = List<Map<String, dynamic>>.from(
+          jsonResponseBukalapak.map((value) => value));
+    }
+    print('searchResultBukalapak');
+    print(searchResultBukalapak);
+    final jsonDecodeTokopedia =
         jsonDecode(response.body)['data']['scrapeTokopedia'];
-    final List<Map<String, dynamic>> searchResultTokopedia =
-        List<Map<String, dynamic>>.from(
-            jsonResponseTokopedia.map((value) => value));
+    print('jsonDecodeTokopedia');
+    print(jsonDecodeTokopedia);
+    if (jsonDecodeTokopedia != null) {
+      final List<dynamic> jsonResponseTokopedia = jsonDecodeTokopedia;
+
+      searchResultTokopedia = List<Map<String, dynamic>>.from(
+          jsonResponseTokopedia.map((value) => value));
+    }
     searchResult["tokopedia"] = searchResultTokopedia;
     searchResult["bukalapak"] = searchResultBukalapak;
     return searchResult;
