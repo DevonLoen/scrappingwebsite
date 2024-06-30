@@ -1,8 +1,8 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:scrappingwebsite/history_screen.dart';
-import 'package:scrappingwebsite/profile_screen.dart';
+import 'package:scrappingwebsite/devon/history_screen.dart';
+import 'package:scrappingwebsite/devon/profile_screen.dart';
 
 class Home_screen extends StatefulWidget {
   const Home_screen({super.key});

@@ -7,6 +7,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:scrappingwebsite/user_provider.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:scrappingwebsite/devon/home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+// import 'package:scrappingwebsite/devon/user_provider.dart';
 
 class Login_screen extends StatefulWidget {
   const Login_screen({super.key});

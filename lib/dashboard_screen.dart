@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:scrappingwebsite/history_screen.dart';
-import 'package:scrappingwebsite/home_screen.dart';
-import 'package:scrappingwebsite/profile_screen.dart';
+import 'package:scrappingwebsite/devon/history_screen.dart';
+import 'package:scrappingwebsite/devon/home_screen.dart';
+import 'package:scrappingwebsite/devon/profile_screen.dart';
 
 class Dashboard_screen extends StatefulWidget {
   @override

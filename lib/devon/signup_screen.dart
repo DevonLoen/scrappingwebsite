@@ -5,10 +5,12 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:scrappingwebsite/login_screen.dart';
+// import 'package:scrappingwebsite/login_screen.dart';
 
 // import 'package:scrappingwebsite/login_screen.dart';
 import 'package:scrappingwebsite/user_provider.dart';
+import 'package:scrappingwebsite/devon/login_screen.dart';
+// import 'package:scrappingwebsite/devon/user_provider.dart
 
 class Signup_screen extends StatefulWidget {
   const Signup_screen({super.key});
@@ -37,6 +39,7 @@ class _Signup_screenState extends State<Signup_screen> {
     // String? dropdownValue;
 
     // Variabel untuk menyimpan nilai dropdown
+
     return Scaffold(
       appBar: AppBar(
         title: Text(''),
