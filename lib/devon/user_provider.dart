@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrappingwebsite/dashboard_screen.dart';
 import 'package:scrappingwebsite/devon/home_screen.dart';
+import 'package:scrappingwebsite/tian/cartListProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Role {
@@ -126,9 +127,45 @@ Future<void> searchData() async {
     final response = await http.get(
         Uri.parse("http://localhost:3000/api/v1/scrapping?search=panci"),
         headers: <String, String>{"Authorization": prefs.getString('token')!});
+    if (jsonDecode(response.body)['error']) {
+      prefs.clear();
+      throw Exception("please log in again");
+    }
     print('response search');
     print(response.body);
   } catch (e) {
+    rethrow;
+  }
+}
+
+Future<List<ItemCart>> getCart() async {
+  final prefs = await SharedPreferences.getInstance();
+  try {
+    if (!prefs.containsKey('token')) {
+      prefs.clear();
+      throw Exception("Please Logged in again");
+    }
+    final response = await http.get(
+        Uri.parse(
+            'http://localhost:3000/api/v1/items/get-own?status=keranjang'),
+        headers: <String, String>{"Authorization": prefs.getString('token')!});
+    print('jsonDecode(respone.body)');
+    print(jsonDecode(response.body));
+    print(jsonDecode(response.body)['items'].runtimeType);
+    final List<dynamic> jsonResponse = jsonDecode(response.body)['items'];
+    print('jsonResponse');
+    print(jsonResponse);
+    final List<Map<String, dynamic>> itemsList =
+        List<Map<String, dynamic>>.from(jsonResponse.map((value) => value));
+    print('itemsList');
+    print(itemsList);
+    return ItemCart.fromJSON(itemsList);
+    // List<Map<String, dynamic>> jsonList =
+    //     jsonDecode(response.body).cast(Map<String, dynamic>);
+    // return ItemCart.fromJSON(jsonList);
+  } catch (e) {
+    print("aaceemmm");
+    print(e);
     rethrow;
   }
 }

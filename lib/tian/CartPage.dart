@@ -8,7 +8,9 @@ import "package:flutter/widgets.dart";
 import "package:provider/provider.dart";
 import "package:scrappingwebsite/devon/home_screen.dart";
 import "package:scrappingwebsite/devon/profile_screen.dart";
+import "package:scrappingwebsite/devon/user_provider.dart";
 import "package:scrappingwebsite/tian/cartListProvider.dart";
+import 'package:intl/intl.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -18,14 +20,20 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  late Future<List<ItemCart>> futureItemCart;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    futureItemCart = getCart();
+  }
+
   @override
   Widget build(BuildContext context) {
     int _selectedindex = 0;
     final cartListProvider = Provider.of<CartListProvider>(context);
     final BukalapakCartList =
         Provider.of<CartListProvider>(context, listen: false).BukalapakCart;
-    final LazadaCartList =
-        Provider.of<CartListProvider>(context, listen: false).LazadaCart;
     final TokopediaCartList =
         Provider.of<CartListProvider>(context, listen: false).TokopediaCart;
     return Scaffold(
@@ -37,37 +45,6 @@ class _CartPageState extends State<CartPage> {
         ),
         backgroundColor: const Color(0xFFFF9900),
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.white,
-        color: Color(0xFFFF9900),
-        index: _selectedindex,
-        items: <Widget>[
-          Icon(Icons.add, size: 30),
-          Icon(IconData(0xe59c, fontFamily: 'MaterialIcons')),
-          Icon(Icons.home_outlined, size: 30),
-          Icon(Icons.person_outline, size: 30),
-        ],
-        onTap: (index) {
-          // _selectedindex = 1;
-          //Handle button tap
-          if (index == 0) {
-            //           Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => Signup_screen()),
-            // );
-          } else if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Home_screen()),
-            );
-          } else {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Profile_screen()),
-            );
-          }
-        },
-      ),
       body: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints.tightFor(
@@ -77,24 +54,30 @@ class _CartPageState extends State<CartPage> {
               SizedBox(
                 height: 20,
               ),
-              CartListViewWidget(
-                  MarketplaceName: "Lazada",
-                  cartList: LazadaCartList,
-                  cartListProvider: cartListProvider),
-              SizedBox(
-                height: 20,
-              ),
+
               CartListViewWidget(
                   MarketplaceName: 'Bukalapak',
-                  cartList: BukalapakCartList,
+                  cartList: futureItemCart,
                   cartListProvider: cartListProvider),
               SizedBox(
                 height: 20,
               ),
-              CartListViewWidget(
-                  MarketplaceName: "Tokopedia",
-                  cartList: TokopediaCartList,
-                  cartListProvider: cartListProvider),
+              // CartListViewWidget(
+              //     MarketplaceName: "Tokopedia",
+              //     cartList: futureItemCart,
+              //     cartListProvider: cartListProvider),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/PurchasePage",
+                        arguments: cartListProvider.getCheckedCart);
+                  },
+                  child: Text(
+                    "Beli Sekarang",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFFFF9900),
+                  ))
             ],
           ),
         ),
@@ -103,7 +86,7 @@ class _CartPageState extends State<CartPage> {
   }
 }
 
-class CartListViewWidget extends StatelessWidget {
+class CartListViewWidget extends StatefulWidget {
   const CartListViewWidget({
     super.key,
     required this.MarketplaceName,
@@ -111,206 +94,265 @@ class CartListViewWidget extends StatelessWidget {
     required this.cartListProvider,
   });
   final String MarketplaceName;
-  final List<ItemCart> cartList;
+  final Future<List<ItemCart>> cartList;
   final CartListProvider cartListProvider;
 
   @override
+  State<CartListViewWidget> createState() => _CartListViewWidgetState();
+}
+
+class _CartListViewWidgetState extends State<CartListViewWidget> {
+  late Future<List<ItemCart>> futureCart;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    futureCart = getCart();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Material(
-      elevation: 20,
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        decoration: BoxDecoration(
-            border: Border.all(color: Color(0xFFFF9900)),
-            borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Text(
-                '$MarketplaceName',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              ),
-            ),
-            Container(
-              // height: 270,
-              constraints: BoxConstraints(minHeight: 150, maxHeight: 270),
-              padding: EdgeInsets.all(10),
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: cartList.length,
-                  itemBuilder: ((context, indexItem) => Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Checkbox(
-                                onChanged: (index) {
-                                  cartListProvider.changeItemCheckedValue(
-                                      cartList, indexItem);
-                                },
-                                value: cartList[indexItem].checked,
-                              ),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.asset(cartList[indexItem].image),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(cartList[indexItem].itemName),
-                                    Text(cartList[indexItem].itemPrice),
-                                    Text(cartList[indexItem].itemStore),
-                                  ],
+    final formatter = NumberFormat('#,###', 'en_US');
+
+    return FutureBuilder<List<ItemCart>>(
+        future: futureCart,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Material(
+              elevation: 20,
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Color(0xFFFF9900)),
+                    borderRadius: BorderRadius.circular(10)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                        '${widget.MarketplaceName}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                    ),
+                    Container(
+                      // height: 270,
+                      constraints:
+                          BoxConstraints(minHeight: 150, maxHeight: 270),
+                      padding: EdgeInsets.all(10),
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: ((context, indexItem) => Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Checkbox(
+                                        onChanged: (index) {
+                                          widget.cartListProvider
+                                              .changeItemCheckedValue(
+                                                  snapshot.data, indexItem);
+                                        },
+                                        value:
+                                            snapshot.data![indexItem].checked,
+                                      ),
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: Image.network(
+                                          snapshot.data![indexItem].image,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              snapshot
+                                                  .data![indexItem].itemName,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            Text(
+                                              'RP. ${formatter.format(snapshot.data![indexItem].itemPrice)}',
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            Text(
+                                              snapshot
+                                                  .data![indexItem].itemStore,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          ClipOval(
+                                            child: Container(
+                                              height: 30,
+                                              width: 30,
+                                              decoration: BoxDecoration(
+                                                  // color: Colors.amber,
+
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        color: const Color
+                                                                .fromARGB(255,
+                                                                202, 202, 202)
+                                                            .withOpacity(0.4),
+                                                        offset: Offset(0, -20),
+                                                        blurRadius: 1)
+                                                  ]),
+                                              child: TextButton(
+                                                  onPressed: () {
+                                                    widget.cartListProvider
+                                                        .SubstractItemTotalValue(
+                                                            snapshot.data,
+                                                            indexItem);
+                                                  },
+                                                  style: ButtonStyle(
+                                                      shape: MaterialStateProperty
+                                                          .all(CircleBorder(
+                                                              side: BorderSide(
+                                                                  width: 2,
+                                                                  color: Color(
+                                                                      0xFFFF9900))))),
+                                                  child: FittedBox(
+                                                    fit: BoxFit.contain,
+                                                    child: Text(
+                                                      "-",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Color(
+                                                              0xFFFF9900)),
+                                                    ),
+                                                  )),
+                                            ),
+                                          ),
+                                          ClipRect(
+                                            child: Container(
+                                              height: 30,
+                                              width: 30,
+                                              decoration: BoxDecoration(
+                                                  // color: Colors.amber,
+
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        color: const Color
+                                                                .fromARGB(255,
+                                                                202, 202, 202)
+                                                            .withOpacity(0.4),
+                                                        offset: Offset(0, -20),
+                                                        blurRadius: 1)
+                                                  ]),
+                                              child: TextButton(
+                                                  onPressed: () {},
+                                                  style: ButtonStyle(
+                                                      shape: MaterialStateProperty.all(
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5),
+                                                              side: BorderSide(
+                                                                  width: 2,
+                                                                  color: Color(
+                                                                      0xFFFF9900))))),
+                                                  child: FittedBox(
+                                                    fit: BoxFit.contain,
+                                                    child: Text(
+                                                      snapshot.data![indexItem]
+                                                          .itemTotal
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Color(
+                                                              0xFFFF9900)),
+                                                    ),
+                                                  )),
+                                            ),
+                                          ),
+                                          ClipOval(
+                                            child: Container(
+                                              height: 30,
+                                              width: 30,
+                                              decoration: BoxDecoration(
+                                                  // color: Colors.amber,
+
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        color: const Color
+                                                                .fromARGB(255,
+                                                                202, 202, 202)
+                                                            .withOpacity(0.4),
+                                                        offset: Offset(0, -20),
+                                                        blurRadius: 1)
+                                                  ]),
+                                              child: TextButton(
+                                                  onPressed: () {
+                                                    widget.cartListProvider
+                                                        .addItemTotalValue(
+                                                            snapshot.data,
+                                                            indexItem);
+                                                  },
+                                                  style: ButtonStyle(
+                                                      shape: MaterialStateProperty
+                                                          .all(CircleBorder(
+                                                              side: BorderSide(
+                                                                  width: 2,
+                                                                  color: Color(
+                                                                      0xFFFF9900))))),
+                                                  child: FittedBox(
+                                                    fit: BoxFit.contain,
+                                                    child: Text(
+                                                      "+",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Color(
+                                                              0xFFFF9900)),
+                                                    ),
+                                                  )),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  ClipOval(
-                                    child: Container(
-                                      height: 30,
-                                      width: 30,
-                                      decoration: BoxDecoration(
-                                          // color: Colors.amber,
+                              ))),
+                    )
+                  ],
+                ),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
 
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: const Color.fromARGB(
-                                                        255, 202, 202, 202)
-                                                    .withOpacity(0.4),
-                                                offset: Offset(0, -20),
-                                                blurRadius: 1)
-                                          ]),
-                                      child: TextButton(
-                                          onPressed: () {
-                                            cartListProvider
-                                                .SubstractItemTotalValue(
-                                                    cartList, indexItem);
-                                          },
-                                          style: ButtonStyle(
-                                              shape: MaterialStateProperty.all(
-                                                  CircleBorder(
-                                                      side: BorderSide(
-                                                          width: 2,
-                                                          color: Color(
-                                                              0xFFFF9900))))),
-                                          child: FittedBox(
-                                            fit: BoxFit.contain,
-                                            child: Text(
-                                              "-",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color(0xFFFF9900)),
-                                            ),
-                                          )),
-                                    ),
-                                  ),
-                                  ClipRect(
-                                    child: Container(
-                                      height: 30,
-                                      width: 30,
-                                      decoration: BoxDecoration(
-                                          // color: Colors.amber,
-
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: const Color.fromARGB(
-                                                        255, 202, 202, 202)
-                                                    .withOpacity(0.4),
-                                                offset: Offset(0, -20),
-                                                blurRadius: 1)
-                                          ]),
-                                      child: TextButton(
-                                          onPressed: () {},
-                                          style: ButtonStyle(
-                                              shape: MaterialStateProperty.all(
-                                                  RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                      side: BorderSide(
-                                                          width: 2,
-                                                          color: Color(
-                                                              0xFFFF9900))))),
-                                          child: FittedBox(
-                                            fit: BoxFit.contain,
-                                            child: Text(
-                                              cartList[indexItem]
-                                                  .itemTotal
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color(0xFFFF9900)),
-                                            ),
-                                          )),
-                                    ),
-                                  ),
-                                  ClipOval(
-                                    child: Container(
-                                      height: 30,
-                                      width: 30,
-                                      decoration: BoxDecoration(
-                                          // color: Colors.amber,
-
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: const Color.fromARGB(
-                                                        255, 202, 202, 202)
-                                                    .withOpacity(0.4),
-                                                offset: Offset(0, -20),
-                                                blurRadius: 1)
-                                          ]),
-                                      child: TextButton(
-                                          onPressed: () {
-                                            cartListProvider.addItemTotalValue(
-                                                cartList, indexItem);
-                                          },
-                                          style: ButtonStyle(
-                                              shape: MaterialStateProperty.all(
-                                                  CircleBorder(
-                                                      side: BorderSide(
-                                                          width: 2,
-                                                          color: Color(
-                                                              0xFFFF9900))))),
-                                          child: FittedBox(
-                                            fit: BoxFit.contain,
-                                            child: Text(
-                                              "+",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color(0xFFFF9900)),
-                                            ),
-                                          )),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ))),
-            )
-          ],
-        ),
-      ),
-    );
+          return CircularProgressIndicator();
+        });
   }
 }

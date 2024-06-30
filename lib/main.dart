@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:scrappingwebsite/dashboard_screen.dart';
 import 'package:scrappingwebsite/devon/history_screen.dart';
 import 'package:scrappingwebsite/devon/home_screen.dart';
 import 'package:scrappingwebsite/devon/login_screen.dart';
@@ -7,6 +8,7 @@ import 'package:scrappingwebsite/devon/profile_screen.dart';
 import 'package:scrappingwebsite/devon/user_provider.dart';
 import 'package:scrappingwebsite/testing.dart';
 import 'package:scrappingwebsite/devon/welcome_screen.dart';
+import 'package:scrappingwebsite/tian/PurchasePage.dart';
 import 'package:scrappingwebsite/tian/cartListProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,7 +40,8 @@ class MyApp extends StatelessWidget {
           initialRoute: this.isLoggedIn ? "/HomeScreen" : "/",
           routes: {
             '/': (context) => Login_screen(),
-            '/HomeScreen': (context) => Home_screen(),
+            '/HomeScreen': (context) => Dashboard_screen(),
+            "/PurchasePage": (context) => PurchasePage()
           },
           debugShowCheckedModeBanner: false,
           title: 'Scraping data website',

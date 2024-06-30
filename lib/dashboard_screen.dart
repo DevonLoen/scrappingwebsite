@@ -3,6 +3,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:scrappingwebsite/devon/history_screen.dart';
 import 'package:scrappingwebsite/devon/home_screen.dart';
 import 'package:scrappingwebsite/devon/profile_screen.dart';
+import 'package:scrappingwebsite/tian/CartPage.dart';
 
 class Dashboard_screen extends StatefulWidget {
   @override
@@ -14,7 +15,7 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
 
   final List<Widget> _children = [
     History_screen(),
-    Center(child: Text('card screen')),
+    CartPage(),
     Home_screen(),
     Profile_screen(),
   ];

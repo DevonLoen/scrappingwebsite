@@ -1,13 +1,13 @@
 import "dart:js";
 
 import "package:flutter/material.dart";
+import "package:intl/intl.dart";
 import "package:provider/provider.dart";
 import "package:scrappingwebsite/tian/CartPage.dart";
 import "package:scrappingwebsite/tian/cartListProvider.dart";
 
 class PurchasePage extends StatefulWidget {
-  const PurchasePage({super.key});
-
+  PurchasePage({super.key});
   @override
   State<PurchasePage> createState() => _PurchasePageState();
 }
@@ -15,26 +15,35 @@ class PurchasePage extends StatefulWidget {
 class _PurchasePageState extends State<PurchasePage> {
   int? selectedDeliveryOptions;
   final List deliveryOptions = [
-    {
-      'type': "Priority",
-      'Estimation': "(Estimasi 1-2 Hari)",
-      "Price": "50.000"
-    },
-    {
-      'type': "Standard",
-      'Estimation': "(Estimasi 2-3 Hari)",
-      "Price": "30.000"
-    },
-    {'type': "Saver", 'Estimation': "(Estimasi 4-5 Hari)", "Price": "20.000"}
+    {'type': "Priority", 'Estimation': "(Estimasi 1-2 Hari)", "Price": 50000},
+    {'type': "Standard", 'Estimation': "(Estimasi 2-3 Hari)", "Price": 30000},
+    {'type': "Saver", 'Estimation': "(Estimasi 4-5 Hari)", "Price": 20000}
   ];
+  int deliveryPrice = 0;
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat('#,###', 'en_US');
+
     final CheckedCartList = Provider.of<CartListProvider>(context).CheckedCart;
     final cartListProvider = Provider.of<CartListProvider>(context);
-
+    final CheckedCartListTes =
+        ModalRoute.of(context)?.settings.arguments == null
+            ? []
+            : ModalRoute.of(context)?.settings.arguments as List<ItemCart>;
+    print('acem');
+    try {
+      if (CheckedCartListTes.length != 0) {
+        print('CheckedCartListTes.runtimeType');
+        print(CheckedCartListTes.runtimeType);
+        print(CheckedCartListTes[0].itemName);
+      }
+    } catch (e) {
+      print('reror cuk');
+      print(e);
+    }
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: const Text(
           "Purchase Now",
           style: TextStyle(color: Colors.white),
@@ -127,6 +136,7 @@ class _PurchasePageState extends State<PurchasePage> {
                           borderRadius: BorderRadius.circular(100),
                           onTap: () {
                             setState(() {
+                              deliveryPrice = deliveryOptions[index]['Price'];
                               selectedDeliveryOptions = index;
                             });
                           },
@@ -155,7 +165,7 @@ class _PurchasePageState extends State<PurchasePage> {
                                         color: const Color(0xFFFF9900)),
                                   ),
                             trailing: Text(
-                              '${deliveryOptions[index]['Price']}',
+                              'RP. ${formatter.format(deliveryOptions[index]['Price'])}',
                               style: TextStyle(fontSize: 20),
                             ),
                           ),
@@ -169,9 +179,11 @@ class _PurchasePageState extends State<PurchasePage> {
             height: 30,
           ),
           CartOrderWidget(
-              MarketplaceName: "Order Summary",
-              cartList: CheckedCartList,
-              cartListProvider: cartListProvider),
+            MarketplaceName: "Order Summary",
+            cartList: CheckedCartListTes,
+            cartListProvider: cartListProvider,
+            deliveryPrice: deliveryPrice,
+          ),
           Container(
               margin: EdgeInsets.all(10), child: Text('Metode Pembayaran')),
           Pembayaran_widget(),
@@ -182,18 +194,21 @@ class _PurchasePageState extends State<PurchasePage> {
 }
 
 class CartOrderWidget extends StatelessWidget {
-  const CartOrderWidget({
-    super.key,
-    required this.MarketplaceName,
-    required this.cartList,
-    required this.cartListProvider,
-  });
+  CartOrderWidget(
+      {super.key,
+      required this.MarketplaceName,
+      required this.cartList,
+      required this.cartListProvider,
+      required this.deliveryPrice});
+  final int deliveryPrice;
   final String MarketplaceName;
-  final List<ItemCart> cartList;
+  final List<dynamic> cartList;
   final CartListProvider cartListProvider;
-
+  int totalPrice = 0;
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat('#,###', 'en_US');
+
     return Material(
       elevation: 20,
       borderRadius: BorderRadius.circular(10),
@@ -220,77 +235,72 @@ class CartOrderWidget extends StatelessWidget {
                 children: [
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: List.generate(
-                          cartList.length,
-                          (indexItem) => Container(
-                                padding: indexItem == 0
-                                    ? EdgeInsets.only()
-                                    : EdgeInsets.only(top: 10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border(
-                                      bottom:
-                                          BorderSide(color: Color(0xFFFF9900))),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
-                                      blurRadius: 1,
-                                      offset: Offset(0, 5), // Vertical shadow
-                                    )
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 20),
-                                  child: Container(
-                                    width: 100,
-                                    height: 100,
-                                    child: Row(
+                      children: List.generate(cartList.length, (indexItem) {
+                        totalPrice += (cartList[indexItem].itemPrice as int) *
+                            cartList[indexItem].itemTotal as int;
+                        return Container(
+                          padding: indexItem == 0
+                              ? EdgeInsets.only()
+                              : EdgeInsets.only(top: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border(
+                                bottom: BorderSide(color: Color(0xFFFF9900))),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 1,
+                                offset: Offset(0, 5), // Vertical shadow
+                              )
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.network(
+                                        cartList[indexItem].image,
+                                        fit: BoxFit.cover),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          child: Image.asset(
-                                              cartList[indexItem].image),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
+                                        Text(cartList[indexItem].itemName),
+                                        Text("Size UK 30",
+                                            style: TextStyle(
+                                                color: Color(0xFFFF9900))),
+                                        Text('Color Black Doff',
+                                            style: TextStyle(
+                                                color: Color(0xFFFF9900))),
                                         Expanded(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  cartList[indexItem].itemName),
-                                              Text("Size UK 30",
-                                                  style: TextStyle(
-                                                      color:
-                                                          Color(0xFFFF9900))),
-                                              Text('Color Black Doff',
-                                                  style: TextStyle(
-                                                      color:
-                                                          Color(0xFFFF9900))),
-                                              Expanded(
-                                                child: Align(
-                                                    alignment:
-                                                        Alignment.bottomRight,
-                                                    child:
-                                                        Text("RP 25.000.000")),
-                                              )
-                                            ],
-                                          ),
-                                        ),
+                                          child: Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: Text(
+                                                  'RP. ${formatter.format(cartList[indexItem].itemPrice * cartList[indexItem].itemTotal)}')),
+                                        )
                                       ],
                                     ),
                                   ),
-                                ),
-                              ))),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      })),
                   SizedBox(
                     height: 20,
                   ),
@@ -316,7 +326,7 @@ class CartOrderWidget extends StatelessWidget {
                               "Subtotal Items",
                               style: TextStyle(fontSize: 14),
                             ),
-                            Text("RP 3.300.000",
+                            Text('RP. ${formatter.format(totalPrice)}',
                                 style: TextStyle(fontSize: 14)),
                           ],
                         ),
@@ -327,7 +337,8 @@ class CartOrderWidget extends StatelessWidget {
                               "Delivery Fee",
                               style: TextStyle(fontSize: 14),
                             ),
-                            Text("RP 30.000", style: TextStyle(fontSize: 14)),
+                            Text('RP. ${formatter.format(deliveryPrice)}',
+                                style: TextStyle(fontSize: 14)),
                           ],
                         ),
                         Row(
@@ -358,7 +369,7 @@ class CartOrderWidget extends StatelessWidget {
                           style: TextStyle(fontSize: 14),
                         ),
                         Text(
-                          "RP 3.335.000",
+                          '${formatter.format(totalPrice + deliveryPrice + 5000)}',
                           style: TextStyle(fontSize: 14),
                         ),
                       ],
