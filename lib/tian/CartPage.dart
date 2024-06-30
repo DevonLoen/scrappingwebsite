@@ -20,12 +20,10 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  late Future<List<ItemCart>> futureItemCart;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    futureItemCart = getCart();
   }
 
   @override
@@ -54,18 +52,15 @@ class _CartPageState extends State<CartPage> {
               SizedBox(
                 height: 20,
               ),
-
               CartListViewWidget(
                   MarketplaceName: 'Bukalapak',
-                  cartList: futureItemCart,
                   cartListProvider: cartListProvider),
               SizedBox(
                 height: 20,
               ),
-              // CartListViewWidget(
-              //     MarketplaceName: "Tokopedia",
-              //     cartList: futureItemCart,
-              //     cartListProvider: cartListProvider),
+              CartListViewWidget(
+                  MarketplaceName: "Tokopedia",
+                  cartListProvider: cartListProvider),
               ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamed(context, "/PurchasePage",
@@ -90,11 +85,9 @@ class CartListViewWidget extends StatefulWidget {
   const CartListViewWidget({
     super.key,
     required this.MarketplaceName,
-    required this.cartList,
     required this.cartListProvider,
   });
   final String MarketplaceName;
-  final Future<List<ItemCart>> cartList;
   final CartListProvider cartListProvider;
 
   @override
@@ -107,7 +100,9 @@ class _CartListViewWidgetState extends State<CartListViewWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    futureCart = getCart();
+    futureCart = widget.MarketplaceName == 'Tokopedia'
+        ? getCartTokopedia()
+        : getCartBukalapak();
   }
 
   @override

@@ -14,9 +14,9 @@ class Home_screen extends StatefulWidget {
 
 class _Home_screenState extends State<Home_screen> {
   int _selectedindex = 2;
-  late SharedPreferences prefs;
   final TextEditingController _searchcontroller = TextEditingController();
 
+  late SharedPreferences prefs;
   @override
   void initState() {
     // TODO: implement initState
@@ -376,11 +376,17 @@ class _Home_screenState extends State<Home_screen> {
               ),
               onPressed: () async {
                 try {
-                  await searchData();
+                  print("ini searchingg");
+                  final response = await searchData();
+                  print('response searchh');
+                  print(response.runtimeType);
+                  Navigator.pushNamed(context, '/itemsResult',
+                      arguments: response);
                 } catch (e) {
                   prefs.clear();
                   print('prefs.getString("token") in searchdata error');
                   print(prefs.getString("token"));
+                  print(e);
                   Navigator.popUntil(context, ModalRoute.withName('/'));
                   setState(() => {});
                 }

@@ -1,11 +1,14 @@
 // import 'dart:ffi';
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:scrappingwebsite/filterpopup.dart';
 import 'package:scrappingwebsite/sortpopup.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Item_Screen extends StatefulWidget {
   const Item_Screen({super.key});
@@ -21,32 +24,14 @@ class _Item_ScreenState extends State<Item_Screen> {
   final SearchController controller = SearchController();
 
   List<String> searchhistory = [];
-  // void sorttermurah(List<Map<String, dynamic>> data) {
-  //   data.sort((a, b) {
-  //     // Check if 'price' key exists and is not null
-  //     if (a['price'] != null && b['price'] != null) {
-  //       // Remove 'Rp ' and '.' from price strings, then parse to int
-  //       int priceA = int.tryParse(
-  //               a['price']!.replaceAll('Rp ', '').replaceAll('.', '')) ??
-  //           0;
-  //       int priceB = int.tryParse(
-  //               b['price']!.replaceAll('Rp ', '').replaceAll('.', '')) ??
-  //           0;
-  //       return priceA.compareTo(priceB);
-  //     } else {
-  //       // Handle cases where 'price' is null or not a valid format
-  //       return 0; // Or handle differently based on your logic
-  //     }
-  //   });
-  // }
   void sorttermurah(List<Map<String, dynamic>> data) {
     data.sort((a, b) {
       try {
         // Extracting and cleaning price strings
         String priceStringA =
-            a['price']!.replaceAll('Rp ', '').replaceAll(',', '');
+            a['harga']!.replaceAll('Rp ', '').replaceAll(',', '');
         String priceStringB =
-            b['price']!.replaceAll('Rp ', '').replaceAll(',', '');
+            b['harga']!.replaceAll('Rp ', '').replaceAll(',', '');
 
         // Parsing prices into integers
         int priceA = int.parse(priceStringA);
@@ -66,9 +51,9 @@ class _Item_ScreenState extends State<Item_Screen> {
       try {
         // Extracting and cleaning price strings
         String priceStringA =
-            a['price']!.replaceAll('Rp ', '').replaceAll(',', '');
+            a['harga']!.replaceAll('Rp ', '').replaceAll(',', '');
         String priceStringB =
-            b['price']!.replaceAll('Rp ', '').replaceAll(',', '');
+            b['harga']!.replaceAll('Rp ', '').replaceAll(',', '');
 
         // Parsing prices into integers
         int priceA = int.parse(priceStringA);
@@ -82,38 +67,6 @@ class _Item_ScreenState extends State<Item_Screen> {
       }
     });
   }
-
-  // void sorttermahal(List<Map<String, dynamic>> products) {
-  //   products.sort((a, b) {
-  //     // Menghapus 'Rp ' dan mengubah string harga menjadi int untuk perbandingan
-  //     int priceA =
-  //         int.parse(a['price']!.replaceAll('Rp ', '').replaceAll('.', ''));
-  //     int priceB =
-  //         int.parse(b['price']!.replaceAll('Rp ', '').replaceAll('.', ''));
-  //     return priceB
-  //         .compareTo(priceA); // Mengurutkan dari harga tertinggi ke terendah
-  //   });
-  // }
-
-  // void sorttermahal(List<Map<String, dynamic>> data) {
-  //   data.sort((a, b) {
-  //     // Check if 'price' key exists and is not null
-  //     if (a['price'] != null && b['price'] != null) {
-  //       // Remove 'Rp ' and '.' from price strings, then parse to int
-  //       int priceA = int.tryParse(
-  //               a['price']!.replaceAll('Rp ', '').replaceAll('.', '')) ??
-  //           0;
-  //       int priceB = int.tryParse(
-  //               b['price']!.replaceAll('Rp ', '').replaceAll('.', '')) ??
-  //           0;
-  //       return priceB
-  //           .compareTo(priceA); // Sort in descending order (highest to lowest)
-  //     } else {
-  //       // Handle cases where 'price' is null or not a valid format
-  //       return 0; // Or handle differently based on your logic
-  //     }
-  //   });
-  // }
 
   final List<Map<String, dynamic>> products = [
     {
@@ -165,25 +118,42 @@ class _Item_ScreenState extends State<Item_Screen> {
     print('mengurutkan');
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   mengurutkan();
-  // }
+  late SharedPreferences prefs;
+  @override
+  void initState() {
+    super.initState();
+    initializeSharedPreferences();
+  }
+
+  Future<void> initializeSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    // Now you can use prefs throughout your widget!
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, dynamic>> tokopediaProducts =
-        products.where((product) => product['source'] == 'Tokopedia').toList();
-
-    List<Map<String, dynamic>> bukalapakProducts =
-        products.where((product) => product['source'] == 'Bukalapak').toList();
+    final forNullMap = {};
+    final productsResult = ModalRoute.of(context)!.settings.arguments == null
+        ? forNullMap
+        : ModalRoute.of(context)!.settings.arguments
+            as Map<String, List<Map<String, dynamic>>>;
+    print('productsResult');
+    print(productsResult);
+    print(productsResult == forNullMap);
+    final bukalapakProducts = productsResult == forNullMap
+        ? []
+        : productsResult!['bukalapak'] as List<Map<String, dynamic>>;
+    final tokopediaProducts = productsResult == forNullMap
+        ? []
+        : productsResult!['tokopedia'] as List<Map<String, dynamic>>;
+    print('bukalapakProductTes.runtimeType');
+    print(tokopediaProducts);
 
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Colors.red,
-      //   title: Text('product page'),
-      // ),
+      appBar: AppBar(
+        backgroundColor: Colors.red,
+        title: Text('product page'),
+      ),
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, innerBoxIsScrolled) => [
           SliverAppBar(
@@ -306,8 +276,11 @@ class _Item_ScreenState extends State<Item_Screen> {
                               // padding: EdgeInsets.only(bottom: 10000),
                               // scrollDirection: acxis,
                               itemCount: products.length,
-                              itemBuilder: (context, index) =>
-                                  product(context, products, index),
+                              itemBuilder: (context, index) => Product(
+                                  context: context,
+                                  product: products,
+                                  index: index,
+                                  MarketplaceName: ""),
                             ),
                           ]
                         ];
@@ -415,7 +388,11 @@ class _Item_ScreenState extends State<Item_Screen> {
                 itemCount:
                     tokopediaProducts.length, // Number of items in the list
                 itemBuilder: (context, index) {
-                  return product(context, tokopediaProducts, index);
+                  return Product(
+                      context: context,
+                      product: tokopediaProducts,
+                      index: index,
+                      MarketplaceName: "tokopedia");
                 },
               ),
             ),
@@ -436,9 +413,13 @@ class _Item_ScreenState extends State<Item_Screen> {
                 scrollDirection:
                     Axis.horizontal, // Set the scroll direction to horizontal
                 itemCount:
-                    bukalapakProducts.length, // Number of items in the list
+                    bukalapakProducts!.length, // Number of items in the list
                 itemBuilder: (context, index) {
-                  return product(context, bukalapakProducts, index);
+                  return Product(
+                      context: context,
+                      product: bukalapakProducts,
+                      index: index,
+                      MarketplaceName: "bukalapak");
                 },
               ),
             ),
@@ -449,108 +430,304 @@ class _Item_ScreenState extends State<Item_Screen> {
   }
 }
 
-product(BuildContext context, List<Map<String, dynamic>> product, int index) {
-  return InkWell(
-    onTap: () {},
-    child: Container(
-      margin: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.5),
-              spreadRadius: 0,
-              blurRadius: 5,
-              offset: Offset(0, 5),
-            ),
-          ],
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(10),
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-              bottomRight: Radius.circular(10))),
-      // color: Colors.red,
-      width: 150,
-      height: 300,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ClipRRect(
+class Product extends StatefulWidget {
+  Product(
+      {super.key,
+      required this.context,
+      required this.MarketplaceName,
+      required this.product,
+      required this.index});
+  BuildContext context;
+  List<dynamic> product;
+  int index;
+  String MarketplaceName;
+
+  @override
+  State<Product> createState() => _ProductState();
+}
+
+class _ProductState extends State<Product> {
+  late SharedPreferences prefs;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initializeSharedPreferences();
+  }
+
+  Future<void> initializeSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    // Now you can use prefs throughout your widget!
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.5),
+                spreadRadius: 0,
+                blurRadius: 5,
+                offset: Offset(0, 5),
+              ),
+            ],
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-            child: Image.network(
-                fit: BoxFit.cover,
-                // height: 150,
-                // width: double.infinity,
-                'https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/11/9/e1c79ed6-f78b-495d-b82a-6c768c98cecc.jpg.webp?ect=4g'),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child: Text(
-              product[index]['name'],
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              // color: Colors.white,
-              // boxShadow: [
-              //   BoxShadow(
-              //     color: Colors.black.withOpacity(0.5),
-              //     spreadRadius: 0,
-              //     blurRadius: 5,
-              //     offset: Offset(0, 5),
-              //   ),
-              // ],
+                bottomLeft: Radius.circular(10),
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+                bottomRight: Radius.circular(10))),
+        // color: Colors.red,
+        width: 150,
+        height: 300,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ClipRRect(
               borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                  bottomRight:
-                      Radius.circular(10)), // Optional: Rounded corners
+                  topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+              child: Image.network(
+                  fit: BoxFit.cover,
+                  // height: 150,
+                  // width: double.infinity,
+                  '${widget.product[widget.index]['img']}'),
             ),
-            width: double.infinity,
-            height: 50,
-            // color: Colors.blue,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 80,
-                    // color: Colors.red,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          product[index]['price'],
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          'Rating ${product[index]['rating']}',
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 10),
-                        ),
-                        Text(
-                          product[index]['city'],
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 10),
-                        ),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.shopping_cart_checkout_outlined,
-                        color: Colors.orange,
-                      ))
-                ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              child: Text(
+                widget.product[widget.index]['nama_produk'],
+                overflow: TextOverflow.ellipsis,
               ),
             ),
-          )
-        ],
+            Container(
+              decoration: BoxDecoration(
+                // color: Colors.white,
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: Colors.black.withOpacity(0.5),
+                //     spreadRadius: 0,
+                //     blurRadius: 5,
+                //     offset: Offset(0, 5),
+                //   ),
+                // ],
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight:
+                        Radius.circular(10)), // Optional: Rounded corners
+              ),
+              width: double.infinity,
+              height: 50,
+              // color: Colors.blue,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 80,
+                      // color: Colors.red,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            widget.product[widget.index]['harga'],
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            'Rating ${widget.product[widget.index]['rating']}',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          Text(
+                            widget.product[widget.index]['lokasi'],
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 10),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                        onPressed: () async {
+                          final response = await http.post(
+                              Uri.parse(
+                                  "http://localhost:3000/api/v1/items/create"),
+                              headers: <String, String>{
+                                'Content-Type':
+                                    'application/json; charset=UTF-8',
+                                "Authorization": prefs.getString('token')!
+                              },
+                              body: jsonEncode(<String, dynamic>{
+                                "nama_produk": widget.product[widget.index]
+                                    ['nama_produk'],
+                                "harga": int.parse(widget.product[widget.index]
+                                        ['harga']
+                                    .replaceAll(RegExp(r'[^0-9]'), '')),
+                                "rating": widget.product[widget.index]
+                                    ['rating'],
+                                "penjualan": widget.product[widget.index]
+                                    ['penjualan'],
+                                "lokasi": widget.product[widget.index]
+                                    ['lokasi'],
+                                "nama_toko": widget.product[widget.index]
+                                    ['nama_toko'],
+                                "image_url": widget.product[widget.index]
+                                    ['img'],
+                                "marketplace": widget.MarketplaceName,
+                                "status": "keranjang",
+                                "jumlah": 1
+                              }));
+                          print('response keranjang');
+                          print(response.body);
+                        },
+                        icon: Icon(
+                          Icons.shopping_cart_checkout_outlined,
+                          color: Colors.orange,
+                        ))
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
+
+// product(BuildContext context, List<dynamic> product, int index,
+//     String MarketplaceName, prefs) {
+//   try {
+//     return InkWell(
+//       onTap: () {},
+//       child: Container(
+//         margin: EdgeInsets.all(10),
+//         decoration: BoxDecoration(
+//             color: Colors.white,
+//             boxShadow: [
+//               BoxShadow(
+//                 color: Colors.black.withOpacity(0.5),
+//                 spreadRadius: 0,
+//                 blurRadius: 5,
+//                 offset: Offset(0, 5),
+//               ),
+//             ],
+//             borderRadius: BorderRadius.only(
+//                 bottomLeft: Radius.circular(10),
+//                 topLeft: Radius.circular(10),
+//                 topRight: Radius.circular(10),
+//                 bottomRight: Radius.circular(10))),
+//         // color: Colors.red,
+//         width: 150,
+//         height: 300,
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             ClipRRect(
+//               borderRadius: BorderRadius.only(
+//                   topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+//               child: Image.network(
+//                   fit: BoxFit.cover,
+//                   // height: 150,
+//                   // width: double.infinity,
+//                   '${widget.product[widget.index]['img']}'),
+//             ),
+//             Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+//               child: Text(
+//                 widget.product[widget.index]['nama_produk'],
+//                 overflow: TextOverflow.ellipsis,
+//               ),
+//             ),
+//             Container(
+//               decoration: BoxDecoration(
+//                 // color: Colors.white,
+//                 // boxShadow: [
+//                 //   BoxShadow(
+//                 //     color: Colors.black.withOpacity(0.5),
+//                 //     spreadRadius: 0,
+//                 //     blurRadius: 5,
+//                 //     offset: Offset(0, 5),
+//                 //   ),
+//                 // ],
+//                 borderRadius: BorderRadius.only(
+//                     bottomLeft: Radius.circular(10),
+//                     bottomRight:
+//                         Radius.circular(10)), // Optional: Rounded corners
+//               ),
+//               width: double.infinity,
+//               height: 50,
+//               // color: Colors.blue,
+//               child: Padding(
+//                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                   children: [
+//                     Container(
+//                       width: 80,
+//                       // color: Colors.red,
+//                       child: Column(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                         children: [
+//                           Text(
+//                             widget.product[widget.index]['harga'],
+//                             overflow: TextOverflow.ellipsis,
+//                           ),
+//                           Text(
+//                             'Rating ${widget.product[widget.index]['rating']}',
+//                             overflow: TextOverflow.ellipsis,
+//                             style: TextStyle(fontSize: 10),
+//                           ),
+//                           Text(
+//                             widget.product[widget.index]['lokasi'],
+//                             overflow: TextOverflow.ellipsis,
+//                             style: TextStyle(fontSize: 10),
+//                           ),
+//                         ],
+//                       ),
+//                     ),
+//                     IconButton(
+//                         onPressed: () async {
+//                           final response = await http.post(
+//                               Uri.parse(
+//                                   "http://localhost:3000/api/v1/items/create"),
+//                               headers: <String, String>{
+//                                 "Authorization": prefs.getString('token')!
+//                               },
+//                               body: jsonEncode({
+//                                 "nama_produk": widget.product[widget.index]['nama_produk'],
+//                                 "harga": int.parse(product[index]['harga']
+//                                     .replaceAll(RegExp(r'[^0-9]'), '')),
+//                                 "rating": product[index]['rating'],
+//                                 "penjualan": product[index]['penjualan'],
+//                                 "lokasi": product[index]['lokasi'],
+//                                 "nama_toko": product[index]['nama_toko'],
+//                                 "image_url": product[index]['img'],
+//                                 "marketplace": MarketplaceName,
+//                                 "status": "keranjang"
+//                               }));
+//                           print('response keranjang');
+//                           print(response);
+//                         },
+//                         icon: Icon(
+//                           Icons.shopping_cart_checkout_outlined,
+//                           color: Colors.orange,
+//                         ))
+//                   ],
+//                 ),
+//               ),
+//             )
+//           ],
+//         ),
+//       ),
+//     );
+//   } catch (e) {
+//     print('error di itemscreen');
+//     print(e);
+//   }
+// }
