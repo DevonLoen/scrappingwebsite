@@ -1,4 +1,14 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
+=======
+import 'package:scrappingwebsite/history_screen.dart';
+import 'package:scrappingwebsite/home_screen.dart';
+import 'package:scrappingwebsite/item_screen.dart';
+import 'package:scrappingwebsite/login_screen.dart';
+import 'package:scrappingwebsite/profile_screen.dart';
+import 'package:scrappingwebsite/testing.dart';
+import 'package:scrappingwebsite/welcome_screen.dart';
+>>>>>>> f4fc174ce7e5be984e79292740cc576eb82ed624
 import 'package:provider/provider.dart';
 import 'package:scrappingwebsite/dashboard_screen.dart';
 import 'package:scrappingwebsite/devon/history_screen.dart';
