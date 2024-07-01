@@ -100,7 +100,10 @@ class Auth extends ChangeNotifier {
           ),
           title: 'This is Ignored',
           desc: 'This is also Ignored',
-          btnOkOnPress: () => Navigator.pushNamed(context, "/HomeScreen"),
+          btnOkOnPress: () {
+            Navigator.pushNamed(context, "/HomeScreen");
+            print('terlogin');
+          },
         ).show();
         // Navigator.push(
         //     context, MaterialPageRoute(builder: ((context) => Home_screen())));

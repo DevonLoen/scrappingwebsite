@@ -5,12 +5,14 @@ import 'package:scrappingwebsite/devon/history_screen.dart';
 import 'package:scrappingwebsite/devon/home_screen.dart';
 import 'package:scrappingwebsite/devon/login_screen.dart';
 import 'package:scrappingwebsite/devon/profile_screen.dart';
+import 'package:scrappingwebsite/devon/signup_screen.dart';
 import 'package:scrappingwebsite/devon/user_provider.dart';
 import 'package:scrappingwebsite/item_screen.dart';
 import 'package:scrappingwebsite/testing.dart';
 import 'package:scrappingwebsite/devon/welcome_screen.dart';
 import 'package:scrappingwebsite/tian/PurchasePage.dart';
 import 'package:scrappingwebsite/tian/cartListProvider.dart';
+import 'package:scrappingwebsite/tian/detailPageScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -40,7 +42,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
           initialRoute: this.isLoggedIn ? "/HomeScreen" : "/",
           routes: {
-            '/': (context) => Login_screen(),
+            '/': (context) => Welcome_screen(),
             '/HomeScreen': (context) => Dashboard_screen(),
             "/PurchasePage": (context) => PurchasePage(),
             "/itemsResult": (context) => Item_Screen()
