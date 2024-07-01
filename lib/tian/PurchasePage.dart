@@ -21,6 +21,7 @@ class _PurchasePageState extends State<PurchasePage> {
     {'type': "Saver", 'Estimation': "(Estimasi 4-5 Hari)", "Price": 20000}
   ];
   int deliveryPrice = 0;
+  int totalPrice = 0;
   @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat('#,###', 'en_US');
@@ -180,6 +181,7 @@ class _PurchasePageState extends State<PurchasePage> {
             height: 30,
           ),
           CartOrderWidget(
+            totalPrice: totalPrice,
             MarketplaceName: "Order Summary",
             cartList: CheckedCartListTes,
             cartListProvider: cartListProvider,
@@ -196,11 +198,13 @@ class _PurchasePageState extends State<PurchasePage> {
             context: context,
             builder: (BuildContext context) {
               return Pembayaran_popup(
+                  cartList: CheckedCartListTes,
                   name: 'DEVddddddddddddddddddddddddddON',
                   number: '01341343',
                   rekening: '12324423',
                   item: 'Nike black panda',
-                  total: '3.125.000');
+                  total:
+                      '${formatter.format(totalPrice + deliveryPrice + 5000)}');
             },
           );
         },
@@ -236,12 +240,13 @@ class CartOrderWidget extends StatelessWidget {
       required this.MarketplaceName,
       required this.cartList,
       required this.cartListProvider,
-      required this.deliveryPrice});
+      required this.deliveryPrice,
+      required this.totalPrice});
   final int deliveryPrice;
   final String MarketplaceName;
   final List<dynamic> cartList;
   final CartListProvider cartListProvider;
-  int totalPrice = 0;
+  int totalPrice;
   @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat('#,###', 'en_US');
@@ -403,7 +408,7 @@ class CartOrderWidget extends StatelessWidget {
                           style: TextStyle(fontSize: 14),
                         ),
                         Text(
-                          '${formatter.format(totalPrice + deliveryPrice + 5000)}',
+                          'RP. ${formatter.format(totalPrice + deliveryPrice + 5000)}',
                           style: TextStyle(fontSize: 14),
                         ),
                       ],

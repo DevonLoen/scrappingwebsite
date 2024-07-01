@@ -30,10 +30,6 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     int _selectedindex = 0;
     final cartListProvider = Provider.of<CartListProvider>(context);
-    final BukalapakCartList =
-        Provider.of<CartListProvider>(context, listen: false).BukalapakCart;
-    final TokopediaCartList =
-        Provider.of<CartListProvider>(context, listen: false).TokopediaCart;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,

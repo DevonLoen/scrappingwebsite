@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:scrappingwebsite/tian/cartListProvider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Pembayaran_popup extends StatefulWidget {
   final String? name;
@@ -6,9 +9,10 @@ class Pembayaran_popup extends StatefulWidget {
   final String? rekening;
   final String? item;
   final String? total;
-
+  final List<dynamic> cartList;
   const Pembayaran_popup(
       {Key? key,
+      required this.cartList,
       required this.name,
       required this.number,
       required this.rekening,
@@ -20,6 +24,19 @@ class Pembayaran_popup extends StatefulWidget {
 }
 
 class _Pembayaran_popupState extends State<Pembayaran_popup> {
+  late SharedPreferences prefs;
+  Future<void> initializeSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    // Now you can use prefs throughout your widget!
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initializeSharedPreferences();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -92,8 +109,21 @@ class _Pembayaran_popupState extends State<Pembayaran_popup> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
+                onPressed: () async {
+                  widget.cartList.forEach((element) async {
+                    print('element pembayaran');
+                    print(element.itemId);
+                    final response = await http.put(
+                        Uri.parse(
+                            'http://localhost:3000/api/v1/items/buy/${element.itemId}?jumlah=${element.itemTotal}'),
+                        headers: <String, String>{
+                          'Content-Type': 'application/json; charset=UTF-8',
+                          "Authorization": prefs.getString('token')!
+                        });
+                    print(response);
+                  });
+
+                  // Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   // minimumSize: Size(100, 2),

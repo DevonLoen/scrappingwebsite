@@ -7,7 +7,7 @@ class ItemCart {
   final int itemPrice;
   final String itemStore;
   int itemTotal;
-
+  final String itemId;
   static List<ItemCart> fromJSON(List<Map<String, dynamic>> jsonList) {
     print('json itemcart');
     print(jsonList);
@@ -19,7 +19,8 @@ class ItemCart {
           itemPrice: json['harga'],
           itemStore: json['nama_toko'],
           itemTotal: json['jumlah'],
-          image: json['image_url']);
+          image: json['image_url'],
+          itemId: json['_id']);
     }).toList();
     print('listCart');
     print(listCart);
@@ -31,26 +32,27 @@ class ItemCart {
       required this.itemPrice,
       required this.itemStore,
       required this.itemTotal,
-      required this.image});
+      required this.image,
+      required this.itemId});
 }
 
 class CartListProvider extends ChangeNotifier {
-  List<ItemCart> BukalapakCart = [
-    ItemCart(
-        itemName: "Adidas Samba",
-        itemPrice: 2100000,
-        itemStore: 'Toko Sepatu',
-        image: "assets/logo.png",
-        itemTotal: 1),
-  ];
-  List<ItemCart> TokopediaCart = [
-    ItemCart(
-        itemTotal: 1,
-        itemName: "Adidas Samba",
-        itemPrice: 2100000,
-        image: "assets/logo.png",
-        itemStore: 'Toko Sepatu')
-  ];
+  // List<ItemCart> BukalapakCart = [
+  //   ItemCart(
+  //       itemName: "Adidas Samba",
+  //       itemPrice: 2100000,
+  //       itemStore: 'Toko Sepatu',
+  //       image: "assets/logo.png",
+  //       itemTotal: 1),
+  // ];
+  // List<ItemCart> TokopediaCart = [
+  //   ItemCart(
+  //       itemTotal: 1,
+  //       itemName: "Adidas Samba",
+  //       itemPrice: 2100000,
+  //       image: "assets/logo.png",
+  //       itemStore: 'Toko Sepatu')
+  // ];
   List<ItemCart> CheckedCart = [];
   void addItemTotalValue(CartList, index) {
     CartList[index].itemTotal += 1;

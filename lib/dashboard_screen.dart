@@ -3,10 +3,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:scrappingwebsite/devon/history_screen.dart';
 import 'package:scrappingwebsite/devon/home_screen.dart';
 import 'package:scrappingwebsite/devon/profile_screen.dart';
-<<<<<<< HEAD
 import 'package:scrappingwebsite/tian/CartPage.dart';
-=======
->>>>>>> baf69cfc124526785f899bfafbbbdc2373fc87f7
 
 class Dashboard_screen extends StatefulWidget {
   @override

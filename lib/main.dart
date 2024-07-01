@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:provider/provider.dart';
 import 'package:scrappingwebsite/dashboard_screen.dart';
 import 'package:scrappingwebsite/devon/history_screen.dart';
@@ -13,26 +12,6 @@ import 'package:scrappingwebsite/devon/welcome_screen.dart';
 import 'package:scrappingwebsite/tian/PurchasePage.dart';
 import 'package:scrappingwebsite/tian/cartListProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-=======
-import 'package:scrappingwebsite/devon/history_screen.dart';
-import 'package:scrappingwebsite/devon/home_screen.dart';
-import 'package:scrappingwebsite/item_screen.dart';
-import 'package:scrappingwebsite/devon/login_screen.dart';
-import 'package:scrappingwebsite/pembayaran_popup.dart';
-import 'package:scrappingwebsite/devon/profile_screen.dart';
-import 'package:scrappingwebsite/testing.dart';
-import 'package:scrappingwebsite/devon/welcome_screen.dart';
-import 'package:scrappingwebsite/devon/login_screen.dart';
-import 'package:scrappingwebsite/devon/profile_screen.dart';
-import 'package:scrappingwebsite/devon/welcome_screen.dart';
-import 'package:provider/provider.dart';
-// import 'package:scrappingwebsite/devon/user_provider.dart';
-import 'package:scrappingwebsite/tian/CartPage.dart';
-import 'package:scrappingwebsite/tian/PurchasePage.dart';
-import 'package:scrappingwebsite/tian/cartListProvider.dart';
-import 'package:scrappingwebsite/tian/detailPageScreen.dart';
-import 'package:scrappingwebsite/user_provider.dart';
->>>>>>> baf69cfc124526785f899bfafbbbdc2373fc87f7
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,7 +38,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => Auth())
       ],
       child: MaterialApp(
-<<<<<<< HEAD
           initialRoute: this.isLoggedIn ? "/HomeScreen" : "/",
           routes: {
             '/': (context) => Login_screen(),
@@ -75,22 +53,6 @@ class MyApp extends StatelessWidget {
           )),
       // home: this.isLoggedIn ? Home_screen() : Login_screen()),
       // home: Testing()),
-=======
-        debugShowCheckedModeBanner: false,
-        title: 'Scraping data website',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-          useMaterial3: true,
-        ),
-        // home: Pembayaran_popup(
-        //     name: 'DEVddddddddddddddddddddddddddON',
-        //     number: '01341343',
-        //     rekening: '12324423',
-        //     item: 'Nike black panda',
-        //     total: '3.125.000'),
-        home: PurchasePage(),
-      ),
->>>>>>> baf69cfc124526785f899bfafbbbdc2373fc87f7
     );
   }
 }

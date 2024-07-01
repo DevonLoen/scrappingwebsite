@@ -65,8 +65,6 @@ class Auth extends ChangeNotifier {
   String? _tempidToken, tempuserId;
 
   bool get isAuth {
-    print('_tempidTokendi atas');
-    print(_tempidToken);
     return _tempidToken != null;
   }
 
@@ -90,8 +88,6 @@ class Auth extends ChangeNotifier {
       if (response.statusCode == 200) {
         prefs.setString('token', jsonDecode(response.body)['token']);
         _tempidToken = jsonDecode(response.body)['token'];
-        print('_tempidToken tdi bawah');
-        print(_tempidToken);
         AwesomeDialog(
           context: context,
           animType: AnimType.scale,
@@ -179,20 +175,15 @@ class Auth extends ChangeNotifier {
 Future<Map<String, List<Map<String, dynamic>>>> searchData(
     String userSearch) async {
   final prefs = await SharedPreferences.getInstance();
-  print("aseasdcasdc");
   try {
     if (!prefs.containsKey('token')) {
       throw Exception("Please Logged in again");
     }
     ;
-    print('userSearch');
-    print(userSearch);
     Uri url = Uri.parse(
         'http://localhost:3000/api/v1/scrapping?search=' + userSearch);
-    print(url);
     final response = await http.get(url,
         headers: <String, String>{"Authorization": prefs.getString('token')!});
-    print(response.body);
     if (jsonDecode(response.body)['error'] != null) {
       prefs.clear();
       throw Exception("please log in again");
@@ -203,20 +194,14 @@ Future<Map<String, List<Map<String, dynamic>>>> searchData(
 
     final jsonDecodeBukalapak =
         jsonDecode(response.body)['data']['scrapeBukalapak'];
-    print('jsonDecodeBukalapak');
-    print(jsonDecodeBukalapak);
     if (jsonDecodeBukalapak != null) {
       final List<dynamic> jsonResponseBukalapak = jsonDecodeBukalapak;
 
       searchResultBukalapak = List<Map<String, dynamic>>.from(
           jsonResponseBukalapak.map((value) => value));
     }
-    print('searchResultBukalapak');
-    print(searchResultBukalapak);
     final jsonDecodeTokopedia =
         jsonDecode(response.body)['data']['scrapeTokopedia'];
-    print('jsonDecodeTokopedia');
-    print(jsonDecodeTokopedia);
     if (jsonDecodeTokopedia != null) {
       final List<dynamic> jsonResponseTokopedia = jsonDecodeTokopedia;
 
@@ -233,7 +218,6 @@ Future<Map<String, List<Map<String, dynamic>>>> searchData(
 
 Future<List<ItemCart>> getCartTokopedia() async {
   final prefs = await SharedPreferences.getInstance();
-
   try {
     Map<String, List<ItemCart>> cartResult = {};
     if (!prefs.containsKey('token')) {
@@ -244,8 +228,6 @@ Future<List<ItemCart>> getCartTokopedia() async {
         Uri.parse(
             'http://localhost:3000/api/v1/items/get-own?status=keranjang'),
         headers: <String, String>{"Authorization": prefs.getString('token')!});
-    print(jsonDecode(response.body)['error'] != '');
-    print('itemsList aaa');
 
     if (jsonDecode(response.body)['error'] == '') {
       prefs.clear();
@@ -253,10 +235,8 @@ Future<List<ItemCart>> getCartTokopedia() async {
     }
 
     final List<dynamic> jsonResponse = jsonDecode(response.body)['items'];
-    print('itemsList');
     final List<Map<String, dynamic>> itemsList =
         List<Map<String, dynamic>>.from(jsonResponse.map((value) => value));
-    print(itemsList.runtimeType);
     final tokopediaCart = ItemCart.fromJSON(itemsList
         .where((element) => element['marketplace'] == 'tokopedia')
         .toList());
@@ -290,34 +270,20 @@ Future<List<ItemCart>> getCartBukalapak() async {
         Uri.parse(
             'http://localhost:3000/api/v1/items/get-own?status=keranjang'),
         headers: <String, String>{"Authorization": prefs.getString('token')!});
-    print(jsonDecode(response.body)['error']);
-
-    print(jsonDecode(response.body)['error'] != '');
-    print('itemsList aaa');
     if (jsonDecode(response.body)['error'] == '') {
       prefs.clear();
       throw Exception("Please log in again");
     }
-    print(response.body);
     final List<dynamic> jsonResponse = jsonDecode(response.body)['items'];
-    print('itemsList');
     final List<Map<String, dynamic>> itemsList =
         List<Map<String, dynamic>>.from(jsonResponse.map((value) => value));
-    print('itemsList.runtimeType');
-    print(itemsList.runtimeType);
-    print(itemsList);
     final coba = itemsList.where((element) {
-      print(element['marketplace']);
       return element['marketplace'] == 'bukalapak';
     }).toList();
-    print('coba');
-    print(coba);
     final bukalapakCart = ItemCart.fromJSON(itemsList
         .where((element) => element['marketplace'] == 'bukalapak')
         .toList());
     cartResult['bukalapak'] = bukalapakCart;
-    print('bukalapakCart');
-    print(bukalapakCart);
     return bukalapakCart;
     List<Map<String, dynamic>> jsonList =
         jsonDecode(response.body).cast(Map<String, dynamic>);

@@ -5,19 +5,12 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-<<<<<<< HEAD
-import 'package:scrappingwebsite/devon/login_screen.dart';
-
-// import 'package:scrappingwebsite/login_screen.dart';
 import 'package:scrappingwebsite/devon/user_provider.dart';
-=======
 // import 'package:scrappingwebsite/login_screen.dart';
 
 // import 'package:scrappingwebsite/login_screen.dart';
-import 'package:scrappingwebsite/user_provider.dart';
 import 'package:scrappingwebsite/devon/login_screen.dart';
 // import 'package:scrappingwebsite/devon/user_provider.dart
->>>>>>> baf69cfc124526785f899bfafbbbdc2373fc87f7
 
 class Signup_screen extends StatefulWidget {
   const Signup_screen({super.key});
@@ -41,17 +34,12 @@ class _Signup_screenState extends State<Signup_screen> {
   @override
   Widget build(BuildContext context) {
     final userListProvider = Provider.of<UserListProvider>(context);
-<<<<<<< HEAD
-    final itemList = userListProvider.Users;
 
-=======
-
-    final userList = userListProvider.users;
+    final userList = userListProvider.Users;
     // String? dropdownValue;
 
     // Variabel untuk menyimpan nilai dropdown
 
->>>>>>> baf69cfc124526785f899bfafbbbdc2373fc87f7
     return Scaffold(
       appBar: AppBar(
         title: Text(''),
@@ -279,11 +267,7 @@ class _Signup_screenState extends State<Signup_screen> {
               minimumSize: Size(200, 45),
               shadowColor: Colors.black,
             ),
-<<<<<<< HEAD
             onPressed: () async {
-=======
-            onPressed: () {
->>>>>>> baf69cfc124526785f899bfafbbbdc2373fc87f7
               if (_usernameController.text.isEmpty ||
                   _emailController.text.isEmpty ||
                   _numberController.text.isEmpty ||
