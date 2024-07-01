@@ -3,6 +3,7 @@ import "dart:js";
 import "package:flutter/material.dart";
 import "package:intl/intl.dart";
 import "package:provider/provider.dart";
+import "package:scrappingwebsite/pembayaran_popup.dart";
 import "package:scrappingwebsite/tian/CartPage.dart";
 import "package:scrappingwebsite/tian/cartListProvider.dart";
 
@@ -188,6 +189,42 @@ class _PurchasePageState extends State<PurchasePage> {
               margin: EdgeInsets.all(10), child: Text('Metode Pembayaran')),
           Pembayaran_widget(),
         ],
+      ),
+      bottomNavigationBar: InkWell(
+        onTap: () {
+          showDialog<String>(
+            context: context,
+            builder: (BuildContext context) {
+              return Pembayaran_popup(
+                  name: 'DEVddddddddddddddddddddddddddON',
+                  number: '01341343',
+                  rekening: '12324423',
+                  item: 'Nike black panda',
+                  total: '3.125.000');
+            },
+          );
+        },
+        child: Container(
+          height: 30,
+          color: Colors.orange,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.payment_outlined,
+                color: Colors.white,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                'BAYAR',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

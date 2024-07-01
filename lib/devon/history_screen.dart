@@ -2,10 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/widgets.dart';
+<<<<<<< HEAD
 import 'package:scrappingwebsite/devon/home_screen.dart';
 import 'package:scrappingwebsite/devon/profile_screen.dart';
 import 'package:scrappingwebsite/filterpopup.dart';
 import 'package:scrappingwebsite/sortpopup.dart';
+=======
+// import 'package:scrappingwebsite/home_screen.dart';
+// import 'package:scrappingwebsite/profile_screen.dart';
+import 'package:scrappingwebsite/filterpopup.dart';
+import 'package:scrappingwebsite/sortpopup.dart';
+
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:scrappingwebsite/devon/home_screen.dart';
+import 'package:scrappingwebsite/devon/profile_screen.dart';
+>>>>>>> baf69cfc124526785f899bfafbbbdc2373fc87f7
 
 class History_screen extends StatefulWidget {
   const History_screen({super.key});
