@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:scrappingwebsite/tian/cartListProvider.dart';
@@ -119,7 +121,12 @@ class _Pembayaran_popupState extends State<Pembayaran_popup> {
                         headers: <String, String>{
                           'Content-Type': 'application/json; charset=UTF-8',
                           "Authorization": prefs.getString('token')!
-                        });
+                        },
+                        body: jsonEncode(<String, String>{
+                          "metode_pembayaran": "dana",
+                          "alamat": "Jalan Gajah",
+                          "delivery_options": "priority"
+                        }));
                     print(response);
                   });
 
