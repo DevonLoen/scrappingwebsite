@@ -1,8 +1,12 @@
+// ignore_for_file: non_constant_identifier_names
+
 import "dart:html";
 
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
+import "package:scrappingwebsite/tian/PurchasePage.dart";
+import "package:scrappingwebsite/tian/cartListProvider.dart";
 import "package:scrappingwebsite/tian/colorPickerDetailPageWidget.dart";
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -13,19 +17,28 @@ import 'dart:math';
 
 class DetailPageWidget extends StatefulWidget {
   final String rating;
-  final String name;
-  final String img;
-  final String price;
+  final String nama_produk;
+  final String image_url;
+  final String nama_toko;
+  final String penjualan;
+  final String lokasi;
+  final String marketplace;
+  final int harga;
   final bool isToped;
   final String linkdetail;
 
-  DetailPageWidget(
-      {required this.rating,
-      required this.name,
-      required this.img,
-      required this.price,
-      required this.isToped,
-      required this.linkdetail});
+  DetailPageWidget({
+    required this.rating,
+    required this.nama_produk,
+    required this.image_url,
+    required this.nama_toko,
+    required this.penjualan,
+    required this.harga,
+    required this.lokasi,
+    required this.marketplace,
+    required this.isToped,
+    required this.linkdetail,
+  });
 
   @override
   State<DetailPageWidget> createState() => _DetailPageWidgetState();
@@ -151,49 +164,39 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
 
   Future<void> fetchData() async {
     try {
-      Map<String, dynamic> data =
-          await fetchAndConvertData(); // Tunggu hingga data selesai diambil
+      Map<String, dynamic> data = await fetchAndConvertData();
 
       setState(() {
-        // Update state dengan data yang sudah diambil
         color = data['color'];
         size = data['size'];
         description = data['description'];
         colortype = translateColorsToEnglish(data['color']);
       });
 
-      // Print data (optional)
       print('Fetched data:');
       print('Color: $color');
       print('Size: $size');
       print('Description: $description');
     } catch (e) {
-      // Handle errors
       print('Error fetching data: $e');
-      // Tambahkan logika penanganan kesalahan jika diperlukan
     }
   }
 
   Future<Map<String, dynamic>> fetchAndConvertData() async {
     try {
-      dynamic datadetail =
-          await getdatadetail(); // Tunggu sampai data selesai diambil
+      dynamic datadetail = await getdatadetail();
 
-      // Access and convert data
       List<String> color = List<String>.from(datadetail['data']['color'] ?? []);
       List<String> size = List<String>.from(datadetail['data']['size'] ?? []);
       String description = datadetail['data']['description'] ?? '';
 
-      // Return the data as a map
       return {
         'color': color,
         'size': size,
         'description': description,
       };
     } catch (e) {
-      // Handle errors
       print('Error fetching data: $e');
-      // Return empty values or throw an exception based on your error handling strategy
       return {
         'color': [],
         'size': [],
@@ -204,41 +207,115 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
 
   String urlSplit(String url) {
     List<String> arr = url.split("/");
-
+    print(arr);
+    print(widget.isToped);
+    print(arr.length);
     String urlsplited = widget.isToped
         ? "http://localhost:3000/api/v1/scrapping/detail?marketplace=tokopedia&title=${arr[3]}&text=${arr[4]}"
-        : "http://localhost:3000/api/v1/scrapping/detail?marketplace=bukalapak&title=${arr[3]}&type=${arr[4]}&text=${arr[5]}";
+        : "http://localhost:3000/api/v1/scrapping/detail?marketplace=bukalapak&title=${arr[4]}&type=${arr[5]}&text=${arr[6]}";
+    print(urlsplited);
     return urlsplited;
   }
 
   Future<dynamic> getdatadetail() async {
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
-    print('ini adalah token');
-    print(token);
     String urlparse = urlSplit(widget.linkdetail);
+    print(urlparse);
+
     try {
       final response = await http.get(
         Uri.parse(urlparse),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': "${token}"
+          'Authorization': "$token"
         },
       );
 
       if (response.statusCode == 200) {
+        print(response);
         final data = jsonDecode(response.body);
         return data;
       } else {
-        throw (jsonDecode(response.body)['message']);
+        throw Exception(jsonDecode(response.body)['message']);
       }
     } catch (e) {
+      print('Error occurred: $e');
       rethrow;
+    }
+  }
+
+  Future<void> _addItemToCart() async {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    try {
+      final response = await http.post(
+        Uri.parse("http://localhost:3000/api/v1/items/create"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Authorization": token!, // Replace with actual token
+        },
+        body: jsonEncode(<String, dynamic>{
+          "nama_produk": widget.nama_produk,
+          "harga": widget.harga,
+          "rating": widget.rating,
+          "penjualan": widget.penjualan,
+          "lokasi": widget.lokasi,
+          "nama_toko": widget.nama_toko,
+          "image_url": widget.image_url,
+          "marketplace": widget.marketplace,
+          "status": "keranjang",
+          "jumlah": 1,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print(data);
+        // Handle successful response data here (e.g., show a success message)
+      } else {
+        // Handle error based on response code or message
+        throw Exception(jsonDecode(response.body)['message']);
+      }
+
+      // Dismiss loading dialog
+      Navigator.of(context).pop();
+
+      // Show success notification
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Berhasil memasukkan ke keranjang"),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      // Dismiss loading dialog
+      Navigator.of(context).pop();
+
+      // Show error notification
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Gagal memasukkan ke keranjang"),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    print(widget.harga);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -253,7 +330,7 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () {},
+              onPressed: _addItemToCart,
               child: const Text(
                 "KERANJANG",
                 style: TextStyle(color: Colors.white),
@@ -270,20 +347,6 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
             SizedBox(
               width: 10,
             ),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text(
-                "BELI LANGSUNG",
-                style: TextStyle(color: Color(0xFFFF9900)),
-              ),
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                      Color.fromARGB(255, 255, 255, 255)),
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(10), // Adjust the radius here
-                  ))),
-            )
           ],
         ),
         decoration: BoxDecoration(
@@ -304,7 +367,7 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                     width: MediaQuery.of(context).size.width - 75),
                 child: Column(children: [
                   Image.network(
-                    widget.img,
+                    widget.image_url,
                     fit: BoxFit.fitWidth,
                   ),
                   // color: Colors.amber,
@@ -313,14 +376,14 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                     height: 10,
                   ),
                   Text(
-                    widget.name,
+                    widget.nama_produk,
                     style: TextStyle(fontSize: 24),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        widget.price,
+                        "Rp. ${widget.harga}",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       SizedBox(

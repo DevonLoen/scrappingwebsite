@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:scrappingwebsite/filterpopup.dart';
 import 'package:scrappingwebsite/sortpopup.dart';
+import 'package:scrappingwebsite/tian/detailPageScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Item_Screen extends StatefulWidget {
@@ -457,13 +458,98 @@ class _ProductState extends State<Product> {
 
   Future<void> initializeSharedPreferences() async {
     prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
     // Now you can use prefs throughout your widget!
+  }
+
+  Future<void> _addItemToCart() async {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    try {
+      final response = await http.post(
+        Uri.parse("http://localhost:3000/api/v1/items/create"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Authorization": token!, // Replace with actual token
+        },
+        body: jsonEncode(<String, dynamic>{
+          "nama_produk": widget.product[widget.index]['nama_produk'],
+          "harga": int.parse(widget.product[widget.index]['harga']
+              .replaceAll(RegExp(r'[^0-9]'), '')),
+          "rating": widget.product[widget.index]['rating'],
+          "penjualan": widget.product[widget.index]['penjualan'],
+          "lokasi": widget.product[widget.index]['lokasi'],
+          "nama_toko": widget.product[widget.index]['nama_toko'],
+          "image_url": widget.product[widget.index]['img'],
+          "marketplace": widget.MarketplaceName,
+          "status": "keranjang",
+          "jumlah": 1,
+        }),
+      );
+
+      print('response keranjang');
+      print(response.body);
+
+      // Dismiss loading dialog
+      Navigator.of(context).pop();
+
+      // Show success notification
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Berhasil memasukkan ke keranjang"),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      // Dismiss loading dialog
+      Navigator.of(context).pop();
+
+      // Show error notification
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Gagal memasukkan ke keranjang"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        print(widget.product[widget.index]['harga']);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => DetailPageWidget(
+                  rating: widget.product[widget.index]['rating'],
+                  image_url: widget.product[widget.index]['img'],
+                  nama_produk: widget.product[widget.index]['nama_produk'],
+                  linkdetail: widget.product[widget.index]['link_detail'],
+                  lokasi: widget.product[widget.index]['lokasi'],
+                  marketplace: widget.MarketplaceName,
+                  nama_toko: widget.product[widget.index]['nama_toko'],
+                  penjualan: widget.product[widget.index]['penjualan'],
+                  isToped: widget.product[widget.index]['link_detail']
+                      .startsWith("https://www.tokopedia.com"),
+                  harga: int.parse(
+                    widget.product[widget.index]['harga']
+                        .replaceAll(RegExp(r'[^0-9]'), ''),
+                  ))),
+        );
+      },
       child: Container(
         margin: EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -552,38 +638,7 @@ class _ProductState extends State<Product> {
                       ),
                     ),
                     IconButton(
-                        onPressed: () async {
-                          final response = await http.post(
-                              Uri.parse(
-                                  "http://localhost:3000/api/v1/items/create"),
-                              headers: <String, String>{
-                                'Content-Type':
-                                    'application/json; charset=UTF-8',
-                                "Authorization": prefs.getString('token')!
-                              },
-                              body: jsonEncode(<String, dynamic>{
-                                "nama_produk": widget.product[widget.index]
-                                    ['nama_produk'],
-                                "harga": int.parse(widget.product[widget.index]
-                                        ['harga']
-                                    .replaceAll(RegExp(r'[^0-9]'), '')),
-                                "rating": widget.product[widget.index]
-                                    ['rating'],
-                                "penjualan": widget.product[widget.index]
-                                    ['penjualan'],
-                                "lokasi": widget.product[widget.index]
-                                    ['lokasi'],
-                                "nama_toko": widget.product[widget.index]
-                                    ['nama_toko'],
-                                "image_url": widget.product[widget.index]
-                                    ['img'],
-                                "marketplace": widget.MarketplaceName,
-                                "status": "keranjang",
-                                "jumlah": 1
-                              }));
-                          print('response keranjang');
-                          print(response.body);
-                        },
+                        onPressed: _addItemToCart,
                         icon: Icon(
                           Icons.shopping_cart_checkout_outlined,
                           color: Colors.orange,
