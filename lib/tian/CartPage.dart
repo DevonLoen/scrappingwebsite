@@ -59,9 +59,9 @@ class _CartPageState extends State<CartPage> {
                   cartListProvider: cartListProvider),
               ElevatedButton(
                   onPressed: () {
-                    print(cartListProvider.getCheckedCart);
-                    // Navigator.pushNamed(context, "/PurchasePage",
-                    //     arguments: cartListProvider.getCheckedCart);
+                    // print(cartListProvider.getCheckedCart);
+                    Navigator.pushNamed(context, "/PurchasePage",
+                        arguments: cartListProvider.getCheckedCart);
                   },
                   child: Text(
                     "Beli Sekarang",
