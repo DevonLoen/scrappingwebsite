@@ -288,12 +288,30 @@ Future<List<ItemCart>> getCartBukalapak() async {
         .toList());
     cartResult['bukalapak'] = bukalapakCart;
     return bukalapakCart;
-    List<Map<String, dynamic>> jsonList =
-        jsonDecode(response.body).cast(Map<String, dynamic>);
-    return ItemCart.fromJSON(jsonList);
   } catch (e) {
     print("aaceemmm");
     print(e);
     rethrow;
+  }
+}
+
+Future getHistory() async {
+  final prefs = await SharedPreferences.getInstance();
+  try {
+    final response = await http.get(
+        Uri.parse("http://localhost:3000/api/v1/history/get-own"),
+        headers: <String, String>{"Authorization": prefs.getString('token')!});
+    print('response history');
+    print(jsonDecode(response.body)['History']);
+    List<dynamic> result = jsonDecode(response.body)['History'];
+    List<Map<String, dynamic>> history =
+        List<Map<String, dynamic>>.from(result.map((value) => value));
+    print('history');
+    print(history.runtimeType);
+    return history;
+  } catch (e) {
+    print('error history');
+    print(e);
+    throw Exception(e.toString());
   }
 }

@@ -278,8 +278,9 @@ class CartOrderWidget extends StatelessWidget {
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: List.generate(cartList.length, (indexItem) {
-                        totalPrice += (cartList[indexItem].itemPrice as int) *
-                            cartList[indexItem].itemTotal as int;
+                        this.totalPrice +=
+                            (cartList[indexItem].itemPrice as int) *
+                                cartList[indexItem].itemTotal as int;
                         return Container(
                           padding: indexItem == 0
                               ? EdgeInsets.only()
