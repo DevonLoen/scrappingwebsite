@@ -6,9 +6,13 @@ import "package:provider/provider.dart";
 import "package:scrappingwebsite/pembayaran_popup.dart";
 import "package:scrappingwebsite/tian/CartPage.dart";
 import "package:scrappingwebsite/tian/cartListProvider.dart";
+import 'package:jwt_decode/jwt_decode.dart';
+import "package:shared_preferences/shared_preferences.dart";
 
 class PurchasePage extends StatefulWidget {
-  PurchasePage({super.key});
+  const PurchasePage({
+    super.key,
+  });
   @override
   State<PurchasePage> createState() => _PurchasePageState();
 }
@@ -22,7 +26,61 @@ class _PurchasePageState extends State<PurchasePage> {
   ];
   int deliveryPrice = 0;
   int totalPrice = 0;
+  String? selectedPayment;
+  late Map<String, dynamic> decodedToken;
   @override
+  void initState() {
+    super.initState();
+    fetchToken();
+  }
+
+  void fetchToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    decodedToken = Jwt.parseJwt(token!);
+
+    // Use decodedToken data as needed
+    print(decodedToken); // Example: Print decoded token data
+  }
+
+  Widget buildPaymentOption(String paymentMethod) {
+    bool isSelected = selectedPayment == paymentMethod;
+
+    return InkWell(
+      onTap: () {
+        setState(() {
+          if (isSelected) {
+            selectedPayment = null; // Deselect if already selected
+          } else {
+            selectedPayment = paymentMethod; // Select the tapped item
+          }
+        });
+        print(paymentMethod);
+      },
+      child: Container(
+        width: double.infinity,
+        height: 40,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(
+            color: isSelected ? Colors.amber : Colors.transparent,
+            width: 1,
+          ),
+        ),
+        margin: EdgeInsets.symmetric(vertical: 5),
+        child: Center(
+          child: Text(
+            paymentMethod,
+            style: TextStyle(
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              color: isSelected ? Colors.amber : Colors.black,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget build(BuildContext context) {
     final formatter = NumberFormat('#,###', 'en_US');
 
@@ -43,6 +101,9 @@ class _PurchasePageState extends State<PurchasePage> {
       print('reror cuk');
       print(e);
     }
+    print('tes');
+    print(CheckedCartList);
+    print(CheckedCartListTes);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -181,15 +242,72 @@ class _PurchasePageState extends State<PurchasePage> {
             height: 30,
           ),
           CartOrderWidget(
-            totalPrice: totalPrice,
-            MarketplaceName: "Order Summary",
-            cartList: CheckedCartListTes,
-            cartListProvider: cartListProvider,
-            deliveryPrice: deliveryPrice,
-          ),
+              totalPrice: totalPrice,
+              MarketplaceName: "Order Summary",
+              cartList: CheckedCartListTes,
+              cartListProvider: cartListProvider,
+              deliveryPrice: deliveryPrice,
+              price: 0),
           Container(
               margin: EdgeInsets.all(10), child: Text('Metode Pembayaran')),
-          Pembayaran_widget(),
+          Container(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(
+                      color: Colors.amber,
+                      width: 1,
+                    ),
+                  ),
+                  width: 160,
+                  height: 240,
+                  child: Column(
+                    children: [
+                      Text(
+                        'Uang Elektronik',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                      buildPaymentOption('ovo'),
+                      buildPaymentOption('dana'),
+                      buildPaymentOption('gopay'),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(
+                      color: Colors.amber,
+                      width: 1,
+                    ),
+                  ),
+                  width: 160,
+                  height: 240,
+                  child: Column(
+                    children: [
+                      Text(
+                        'Bank',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                      buildPaymentOption('bca'),
+                      buildPaymentOption('bri'),
+                      buildPaymentOption('mandiri'),
+                      buildPaymentOption('bni'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: InkWell(
@@ -198,13 +316,18 @@ class _PurchasePageState extends State<PurchasePage> {
             context: context,
             builder: (BuildContext context) {
               return Pembayaran_popup(
-                  cartList: CheckedCartListTes,
-                  name: 'DEVddddddddddddddddddddddddddON',
-                  number: '01341343',
-                  rekening: '12324423',
-                  item: 'Nike black panda',
-                  total:
-                      '${formatter.format(totalPrice + deliveryPrice + 5000)}');
+                cartList: CheckedCartListTes,
+                name:
+                    '${decodedToken['first_name']} ${decodedToken['last_name']}',
+                number: '${decodedToken['phone_number']}',
+                rekening: '83759656658',
+                item: "Product",
+                total: '${formatter.format(totalPrice + deliveryPrice + 5000)}',
+                alamat: "Jl. M. H. Thamrin, Nomor 100A",
+                metode_pembayaran: selectedPayment!,
+                delivery_options: deliveryOptions[selectedDeliveryOptions!]
+                    ['type'],
+              );
             },
           );
         },
@@ -235,22 +358,25 @@ class _PurchasePageState extends State<PurchasePage> {
 }
 
 class CartOrderWidget extends StatelessWidget {
+  final int price;
   CartOrderWidget(
       {super.key,
       required this.MarketplaceName,
       required this.cartList,
       required this.cartListProvider,
       required this.deliveryPrice,
+      required this.price,
       required this.totalPrice});
   final int deliveryPrice;
   final String MarketplaceName;
   final List<dynamic> cartList;
   final CartListProvider cartListProvider;
+
   int totalPrice;
   @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat('#,###', 'en_US');
-
+    print(price);
     return Material(
       elevation: 20,
       borderRadius: BorderRadius.circular(10),
@@ -366,7 +492,7 @@ class CartOrderWidget extends StatelessWidget {
                               "Subtotal Items",
                               style: TextStyle(fontSize: 14),
                             ),
-                            Text('RP. ${formatter.format(totalPrice)}',
+                            Text('RP. ${price}',
                                 style: TextStyle(fontSize: 14)),
                           ],
                         ),
@@ -409,7 +535,7 @@ class CartOrderWidget extends StatelessWidget {
                           style: TextStyle(fontSize: 14),
                         ),
                         Text(
-                          'RP. ${formatter.format(totalPrice + deliveryPrice + 5000)}',
+                          'RP. ${formatter.format(price + totalPrice + deliveryPrice + 5000)}',
                           style: TextStyle(fontSize: 14),
                         ),
                       ],
@@ -425,255 +551,326 @@ class CartOrderWidget extends StatelessWidget {
   }
 }
 
-class Pembayaran_widget extends StatelessWidget {
-  const Pembayaran_widget({super.key});
+// class Pembayaran_widget extends StatefulWidget {
+//   const Pembayaran_widget({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-            decoration: BoxDecoration(
-              // color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25),
-                  topRight: Radius.circular(25),
-                  bottomLeft: Radius.circular(25),
-                  bottomRight: Radius.circular(25)),
-              border: Border.all(
-                color: Colors.amber, // Warna border
-                width: 1, // Lebar border
-              ),
-            ),
-            width: 160,
-            height: 190,
-            // color: Colors.amber,
-            child: Column(
-              children: [
-                Text(
-                  'Uang Elektronik',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                InkWell(
-                  onTap: () {
-                    print('ovo');
-                  },
-                  child: Container(
-                    // color: Colors.red,
-                    width: double.infinity,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      // color: Colors.red,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
-                        bottomLeft: Radius.circular(15),
-                        bottomRight: Radius.circular(15),
-                      ),
-                      border: Border.all(
-                        color: Colors.amber, // Warna border
-                        width: 1, // Lebar border
-                      ),
-                    ),
-                    margin: EdgeInsets.symmetric(vertical: 5),
+//   @override
+//   _Pembayaran_widgetState createState() => _Pembayaran_widgetState();
+// }
 
-                    child: Center(child: Text('ini adalah ovo')),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    print('dana');
-                  },
-                  child: Container(
-                    // color: Colors.red,
-                    width: double.infinity,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      // color: Colors.red,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
-                        bottomLeft: Radius.circular(15),
-                        bottomRight: Radius.circular(15),
-                      ),
-                      border: Border.all(
-                        color: Colors.amber, // Warna border
-                        width: 1, // Lebar border
-                      ),
-                    ),
-                    margin: EdgeInsets.symmetric(vertical: 5),
+// class _Pembayaran_widgetState extends State<Pembayaran_widget> {
+//   String? selectedPayment;
 
-                    child: Center(child: Text('ini adalah dana')),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    print('gopay');
-                  },
-                  child: Container(
-                    // color: Colors.red,
-                    width: double.infinity,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      // color: Colors.red,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
-                        bottomLeft: Radius.circular(15),
-                        bottomRight: Radius.circular(15),
-                      ),
-                      border: Border.all(
-                        color: Colors.amber, // Warna border
-                        width: 1, // Lebar border
-                      ),
-                    ),
-                    margin: EdgeInsets.symmetric(vertical: 5),
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Container(
+//             padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+//             decoration: BoxDecoration(
+//               borderRadius: BorderRadius.circular(25),
+//               border: Border.all(
+//                 color: Colors.amber,
+//                 width: 1,
+//               ),
+//             ),
+//             width: 160,
+//             height: 240,
+//             child: Column(
+//               children: [
+//                 Text(
+//                   'Uang Elektronik',
+//                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+//                 ),
+//                 buildPaymentOption('ovo'),
+//                 buildPaymentOption('dana'),
+//                 buildPaymentOption('gopay'),
+//               ],
+//             ),
+//           ),
+//           Container(
+//             padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+//             decoration: BoxDecoration(
+//               borderRadius: BorderRadius.circular(25),
+//               border: Border.all(
+//                 color: Colors.amber,
+//                 width: 1,
+//               ),
+//             ),
+//             width: 160,
+//             height: 240,
+//             child: Column(
+//               children: [
+//                 Text(
+//                   'Bank',
+//                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+//                 ),
+//                 buildPaymentOption('bca'),
+//                 buildPaymentOption('bri'),
+//                 buildPaymentOption('mandiri'),
+//                 buildPaymentOption('bni'),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
-                    child: Center(child: Text('ini adalah gopay')),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // bank
-          Container(
-            padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-            decoration: BoxDecoration(
-              // color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25),
-                topRight: Radius.circular(25),
-                bottomLeft: Radius.circular(25),
-                bottomRight: Radius.circular(25),
-              ),
-              border: Border.all(
-                color: Colors.amber, // Warna border
-                width: 1, // Lebar border
-              ),
-            ),
-            width: 160,
-            height: 240,
-            // color: Colors.amber,
-            child: Column(
-              children: [
-                Text(
-                  'Bank',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                InkWell(
-                  onTap: () {
-                    print('gopay');
-                  },
-                  child: Container(
-                    // color: Colors.red,
-                    width: double.infinity,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      // color: Colors.red,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
-                        bottomLeft: Radius.circular(15),
-                        bottomRight: Radius.circular(15),
-                      ),
-                      border: Border.all(
-                        color: Colors.amber, // Warna border
-                        width: 1, // Lebar border
-                      ),
-                    ),
-                    margin: EdgeInsets.symmetric(vertical: 5),
+// class Pembayaran_widget extends StatelessWidget {
+//   const Pembayaran_widget({super.key});
 
-                    child: Center(child: Text('ini adalah bca')),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    print('bca');
-                  },
-                  child: Container(
-                    // color: Colors.red,
-                    width: double.infinity,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      // color: Colors.red,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
-                        bottomLeft: Radius.circular(15),
-                        bottomRight: Radius.circular(15),
-                      ),
-                      border: Border.all(
-                        color: Colors.amber, // Warna border
-                        width: 1, // Lebar border
-                      ),
-                    ),
-                    margin: EdgeInsets.symmetric(vertical: 5),
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Container(
+//             padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+//             decoration: BoxDecoration(
+//               // color: Colors.white,
+//               borderRadius: BorderRadius.only(
+//                   topLeft: Radius.circular(25),
+//                   topRight: Radius.circular(25),
+//                   bottomLeft: Radius.circular(25),
+//                   bottomRight: Radius.circular(25)),
+//               border: Border.all(
+//                 color: Colors.amber, // Warna border
+//                 width: 1, // Lebar border
+//               ),
+//             ),
+//             width: 160,
+//             height: 190,
+//             // color: Colors.amber,
+//             child: Column(
+//               children: [
+//                 Text(
+//                   'Uang Elektronik',
+//                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+//                 ),
+//                 InkWell(
+//                   onTap: () {
+//                     print('ovo');
+//                   },
+//                   child: Container(
+//                     // color: Colors.red,
+//                     width: double.infinity,
+//                     height: 40,
+//                     decoration: BoxDecoration(
+//                       // color: Colors.red,
+//                       borderRadius: BorderRadius.only(
+//                         topLeft: Radius.circular(15),
+//                         topRight: Radius.circular(15),
+//                         bottomLeft: Radius.circular(15),
+//                         bottomRight: Radius.circular(15),
+//                       ),
+//                       border: Border.all(
+//                         color: Colors.amber, // Warna border
+//                         width: 1, // Lebar border
+//                       ),
+//                     ),
+//                     margin: EdgeInsets.symmetric(vertical: 5),
 
-                    child: Center(child: Text('ini adalah bri')),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    print('bri');
-                  },
-                  child: Container(
-                    // color: Colors.red,
-                    width: double.infinity,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      // color: Colors.red,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
-                        bottomLeft: Radius.circular(15),
-                        bottomRight: Radius.circular(15),
-                      ),
-                      border: Border.all(
-                        color: Colors.amber, // Warna border
-                        width: 1, // Lebar border
-                      ),
-                    ),
-                    margin: EdgeInsets.symmetric(vertical: 5),
+//                     child: Center(child: Text('ovo')),
+//                   ),
+//                 ),
+//                 InkWell(
+//                   onTap: () {
+//                     print('dana');
+//                   },
+//                   child: Container(
+//                     // color: Colors.red,
+//                     width: double.infinity,
+//                     height: 40,
+//                     decoration: BoxDecoration(
+//                       // color: Colors.red,
+//                       borderRadius: BorderRadius.only(
+//                         topLeft: Radius.circular(15),
+//                         topRight: Radius.circular(15),
+//                         bottomLeft: Radius.circular(15),
+//                         bottomRight: Radius.circular(15),
+//                       ),
+//                       border: Border.all(
+//                         color: Colors.amber, // Warna border
+//                         width: 1, // Lebar border
+//                       ),
+//                     ),
+//                     margin: EdgeInsets.symmetric(vertical: 5),
 
-                    child: Center(child: Text('ini adalah mandiri')),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    print('bni');
-                  },
-                  child: Container(
-                    // color: Colors.red,
-                    width: double.infinity,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      // color: Colors.red,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
-                        bottomLeft: Radius.circular(15),
-                        bottomRight: Radius.circular(15),
-                      ),
-                      border: Border.all(
-                        color: Colors.amber, // Warna border
-                        width: 1, // Lebar border
-                      ),
-                    ),
-                    margin: EdgeInsets.symmetric(vertical: 5),
+//                     child: Center(child: Text('dana')),
+//                   ),
+//                 ),
+//                 InkWell(
+//                   onTap: () {
+//                     print('gopay');
+//                   },
+//                   child: Container(
+//                     // color: Colors.red,
+//                     width: double.infinity,
+//                     height: 40,
+//                     decoration: BoxDecoration(
+//                       // color: Colors.red,
+//                       borderRadius: BorderRadius.only(
+//                         topLeft: Radius.circular(15),
+//                         topRight: Radius.circular(15),
+//                         bottomLeft: Radius.circular(15),
+//                         bottomRight: Radius.circular(15),
+//                       ),
+//                       border: Border.all(
+//                         color: Colors.amber, // Warna border
+//                         width: 1, // Lebar border
+//                       ),
+//                     ),
+//                     margin: EdgeInsets.symmetric(vertical: 5),
 
-                    child: Center(child: Text('ini adalah bni')),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//                     child: Center(child: Text('gopay')),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//           // bank
+//           Container(
+//             padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+//             decoration: BoxDecoration(
+//               // color: Colors.white,
+//               borderRadius: BorderRadius.only(
+//                 topLeft: Radius.circular(25),
+//                 topRight: Radius.circular(25),
+//                 bottomLeft: Radius.circular(25),
+//                 bottomRight: Radius.circular(25),
+//               ),
+//               border: Border.all(
+//                 color: Colors.amber, // Warna border
+//                 width: 1, // Lebar border
+//               ),
+//             ),
+//             width: 160,
+//             height: 240,
+//             // color: Colors.amber,
+//             child: Column(
+//               children: [
+//                 Text(
+//                   'Bank',
+//                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+//                 ),
+//                 InkWell(
+//                   onTap: () {
+//                     print('gopay');
+//                   },
+//                   child: Container(
+//                     // color: Colors.red,
+//                     width: double.infinity,
+//                     height: 40,
+//                     decoration: BoxDecoration(
+//                       // color: Colors.red,
+//                       borderRadius: BorderRadius.only(
+//                         topLeft: Radius.circular(15),
+//                         topRight: Radius.circular(15),
+//                         bottomLeft: Radius.circular(15),
+//                         bottomRight: Radius.circular(15),
+//                       ),
+//                       border: Border.all(
+//                         color: Colors.amber, // Warna border
+//                         width: 1, // Lebar border
+//                       ),
+//                     ),
+//                     margin: EdgeInsets.symmetric(vertical: 5),
+
+//                     child: Center(child: Text('bca')),
+//                   ),
+//                 ),
+//                 InkWell(
+//                   onTap: () {
+//                     print('bca');
+//                   },
+//                   child: Container(
+//                     // color: Colors.red,
+//                     width: double.infinity,
+//                     height: 40,
+//                     decoration: BoxDecoration(
+//                       // color: Colors.red,
+//                       borderRadius: BorderRadius.only(
+//                         topLeft: Radius.circular(15),
+//                         topRight: Radius.circular(15),
+//                         bottomLeft: Radius.circular(15),
+//                         bottomRight: Radius.circular(15),
+//                       ),
+//                       border: Border.all(
+//                         color: Colors.amber, // Warna border
+//                         width: 1, // Lebar border
+//                       ),
+//                     ),
+//                     margin: EdgeInsets.symmetric(vertical: 5),
+
+//                     child: Center(child: Text('bri')),
+//                   ),
+//                 ),
+//                 InkWell(
+//                   onTap: () {
+//                     print('bri');
+//                   },
+//                   child: Container(
+//                     // color: Colors.red,
+//                     width: double.infinity,
+//                     height: 40,
+//                     decoration: BoxDecoration(
+//                       // color: Colors.red,
+//                       borderRadius: BorderRadius.only(
+//                         topLeft: Radius.circular(15),
+//                         topRight: Radius.circular(15),
+//                         bottomLeft: Radius.circular(15),
+//                         bottomRight: Radius.circular(15),
+//                       ),
+//                       border: Border.all(
+//                         color: Colors.amber, // Warna border
+//                         width: 1, // Lebar border
+//                       ),
+//                     ),
+//                     margin: EdgeInsets.symmetric(vertical: 5),
+
+//                     child: Center(child: Text('mandiri')),
+//                   ),
+//                 ),
+//                 InkWell(
+//                   onTap: () {
+//                     print('bni');
+//                   },
+//                   child: Container(
+//                     // color: Colors.red,
+//                     width: double.infinity,
+//                     height: 40,
+//                     decoration: BoxDecoration(
+//                       // color: Colors.red,
+//                       borderRadius: BorderRadius.only(
+//                         topLeft: Radius.circular(15),
+//                         topRight: Radius.circular(15),
+//                         bottomLeft: Radius.circular(15),
+//                         bottomRight: Radius.circular(15),
+//                       ),
+//                       border: Border.all(
+//                         color: Colors.amber, // Warna border
+//                         width: 1, // Lebar border
+//                       ),
+//                     ),
+//                     margin: EdgeInsets.symmetric(vertical: 5),
+
+//                     child: Center(child: Text('bni')),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

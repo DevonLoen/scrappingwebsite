@@ -21,8 +21,8 @@ class _Login_screenState extends State<Login_screen> {
   bool _obscureText = true;
   final _passwordController = TextEditingController();
   final _emailController = TextEditingController();
-  String email = '';
-  String password = '';
+  String email = 'jer@gmail.com';
+  String password = '123456';
 
   bool _isChecked = false;
 
