@@ -5,7 +5,10 @@ import 'package:scrappingwebsite/devon/history_screen.dart';
 import 'package:scrappingwebsite/devon/home_screen.dart';
 
 import 'package:provider/provider.dart';
+import 'package:scrappingwebsite/devon/login_screen.dart';
 import 'package:scrappingwebsite/devon/user_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 
 class Profile_screen extends StatefulWidget {
   const Profile_screen({super.key});
@@ -15,10 +18,34 @@ class Profile_screen extends StatefulWidget {
 }
 
 class _Profile_screenState extends State<Profile_screen> {
+  @override
+  void initState() {
+    super.initState();
+    fetchToken();
+  }
+
+  void fetchToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    if (token == null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Login_screen()),
+      );
+    }
+    decodedToken = Jwt.parseJwt(token!);
+
+    // Use decodedToken data as needed
+    print(decodedToken); // Example: Print decoded token data
+    setState(() {});
+  }
+
   int _selectedindex = 3;
   final _passwordController = TextEditingController();
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
+
+  Map<String, dynamic>? decodedToken;
 
   @override
   Widget build(BuildContext context) {
@@ -38,16 +65,28 @@ class _Profile_screenState extends State<Profile_screen> {
           //   },
           // ),
           PopupMenuButton<String>(
-            onSelected: (String value) {
+            onSelected: (String value) async {
               // Lakukan sesuatu saat item dipilih
-              print('Anda memilih: $value');
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              await prefs.setString('token', '');
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Login_screen()),
+              );
             },
             itemBuilder: (BuildContext context) {
-              return {'Pilihan 1', 'Pilihan 2', 'Pilihan 3'}
-                  .map((String choice) {
+              return {'Log Out'}.map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
-                  child: Text(choice),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons
+                          .logout_outlined), // Ganti dengan ikon yang Anda inginkan
+                      SizedBox(
+                          width: 8), // Tambahkan jarak antara ikon dan teks
+                      Text(choice),
+                    ],
+                  ),
                 );
               }).toList();
             },
@@ -98,7 +137,7 @@ class _Profile_screenState extends State<Profile_screen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          userList[0].first_name,
+                          decodedToken!['first_name'] ?? 'null',
                           style: TextStyle(
                             fontSize: 17.0,
                             fontWeight: FontWeight.bold,
@@ -107,7 +146,7 @@ class _Profile_screenState extends State<Profile_screen> {
                         ),
                         SizedBox(height: 8.0),
                         Text(
-                          userList[0].email,
+                          decodedToken!['email'] ?? 'null',
                           style: TextStyle(
                             fontSize: 13.0,
                             color: Colors.black,
@@ -143,7 +182,7 @@ class _Profile_screenState extends State<Profile_screen> {
                   ),
                   SizedBox(height: 2.0),
                   Text(
-                    userList[0].address,
+                    decodedToken!['address'] ?? 'null',
                     style: TextStyle(
                       fontSize: 13.0,
                       color: Colors.black,
@@ -178,7 +217,7 @@ class _Profile_screenState extends State<Profile_screen> {
                   ),
                   SizedBox(height: 2.0),
                   Text(
-                    '${userList[0].phone_number}',
+                    decodedToken!['phone_number'] ?? 'null',
                     style: TextStyle(
                       fontSize: 13.0,
                       color: Colors.black,
@@ -213,7 +252,7 @@ class _Profile_screenState extends State<Profile_screen> {
                   ),
                   SizedBox(height: 2.0),
                   Text(
-                    userList[0].address,
+                    decodedToken!['address'] ?? 'null',
                     style: TextStyle(
                       fontSize: 13.0,
                       color: Colors.black,
@@ -248,7 +287,7 @@ class _Profile_screenState extends State<Profile_screen> {
                   ),
                   SizedBox(height: 2.0),
                   Text(
-                    userList[0].last_name,
+                    'Laki - Laki',
                     style: TextStyle(
                       fontSize: 13.0,
                       color: Colors.black,

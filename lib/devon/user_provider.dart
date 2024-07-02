@@ -9,6 +9,7 @@ import 'package:scrappingwebsite/devon/home_screen.dart';
 import 'package:scrappingwebsite/devon/login_screen.dart';
 import 'package:scrappingwebsite/tian/cartListProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 
 class Role {
   static const String admin = 'admin';
@@ -57,6 +58,8 @@ class UserListProvider extends ChangeNotifier {
     _Users.removeAt(index);
     notifyListeners();
   }
+
+  void getUser() {}
 }
 
 class Auth extends ChangeNotifier {

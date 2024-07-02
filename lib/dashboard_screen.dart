@@ -6,12 +6,18 @@ import 'package:scrappingwebsite/devon/profile_screen.dart';
 import 'package:scrappingwebsite/tian/CartPage.dart';
 
 class Dashboard_screen extends StatefulWidget {
+  final int selectedIndex;
+
+  const Dashboard_screen({Key? key, required this.selectedIndex})
+      : super(key: key);
+
   @override
   _Dashboard_screenState createState() => _Dashboard_screenState();
 }
 
 class _Dashboard_screenState extends State<Dashboard_screen> {
   int _selectedIndex = 2;
+  bool firsttime = true;
 
   final List<Widget> _children = [
     History_screen(),
@@ -23,11 +29,14 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
   void onTabTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      firsttime = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    _selectedIndex = firsttime ? widget.selectedIndex : _selectedIndex;
+
     return Scaffold(
       // appBar: AppBar(
       //   title: Text('Convex Bottom Bar Example'),

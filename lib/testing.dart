@@ -1,917 +1,107 @@
-import 'package:flutter/material.dart';
-import 'package:scrappingwebsite/filterpopup.dart';
-
-class Testing extends StatefulWidget {
-  @override
-  State<Testing> createState() => _TestingState();
+void sortProductsByPriceDescending(List<dynamic> products) {
+  products.sort((a, b) => double.parse(b['harga'].replaceAll('.', ''))
+      .compareTo(double.parse(a['harga'].replaceAll('.', ''))));
 }
 
-class _TestingState extends State<Testing> {
-  List<String>? selectedFilters = [
-    'selesai',
-    'pengiriman',
-    'tiba',
-    'konfirmasi',
-    'batal'
+void sortProductsByPriceAscending(List<dynamic> products) {
+  products.sort((a, b) => double.parse(a['harga'].replaceAll('.', ''))
+      .compareTo(double.parse(b['harga'].replaceAll('.', ''))));
+}
+
+void main() {
+  List<dynamic> products = [
+    {
+      'img':
+          'https://s1.bukalapak.com/img/65384570011/s-330-330/Acetech_RGB_Wireless_Charging_Gaming_Mouse_2.png.webp',
+      'nama_produk':
+          'Acetech RGB Wireless Charging Gaming Mouse 2.4Ghz For Komputer laptop PC Free Mouse Pad',
+      'harga': '2.393.000',
+      'rating': 4,
+      'penjualan': 'Terjual 2',
+      'lokasi': 'Tangerang',
+      'nama_toko': 'Global Jaya Shop',
+      'link_detail':
+          'https://www.bukalapak.com/p/elektronik/elektronik-lainnya/1trvdim-jual-acetech-rgb-wireless-charging-gaming-mouse-2-4ghz-for-komputer-laptop-pc-free-mouse-pad?from=list-product&pos=0'
+    },
+    {
+      'img':
+          'https://s2.bukalapak.com/img/24182582992/s-330-330/data.jpeg.webp',
+      'nama_produk':
+          'Acome Mouse Fashion Color Wireless Silent Click Ergonomic AM300',
+      'harga': '293.000',
+      'rating': 5,
+      'penjualan': 'Terjual 2',
+      'lokasi': 'Tangerang Selatan',
+      'nama_toko': 'Panda Store',
+      'link_detail':
+          'https://www.bukalapak.com/p/komputer/aksesoris-226/mouse/4hezt84-jual-acome-mouse-fashion-color-wireless-silent-click-ergonomic-am300?from=list-product&pos=1'
+    },
+    {
+      'img': 'https://s0.bukalapak.com/img/09353390992/s-330-330/data.png.webp',
+      'nama_produk':
+          'Mouse Philips G314 PH-SPK9314 Macro Gaming Mouse Ambiglow RGB',
+      'harga': '2.000',
+      'rating': 5,
+      'penjualan': 'Terjual 1',
+      'lokasi': 'Tangerang Selatan',
+      'nama_toko': 'Panda Store',
+      'link_detail':
+          'https://www.bukalapak.com/p/komputer/aksesoris-226/mouse/4he0tvp-jual-mouse-philips-g314-ph-spk9314-macro-gaming-mouse-ambiglow-rgb?from=list-product&pos=2'
+    },
+    {
+      'img':
+          'https://s3.bukalapak.com/img/82744433203/s-330-330/data.jpeg.webp',
+      'nama_produk':
+          'Mouse Wireless 2.4Ghz Optical 1200DPI Kursor Akurat for PC Laptop Mouse Gaming',
+      'harga': '239.000',
+      'rating': 5,
+      'penjualan': 'Terjual 1',
+      'lokasi': 'Tangerang',
+      'nama_toko': 'Global Jaya Shop',
+      'link_detail':
+          'https://www.bukalapak.com/p/komputer/aksesoris-226/mouse/17q4990-jual-mouse-wireless-2-4ghz-optical-1200dpi-kursor-akurat-for-pc-laptop-mouse-gaming?from=list-product&pos=3'
+    },
+    {
+      'img':
+          'https://s4.bukalapak.com/img/47329938103/s-330-330/data.jpeg.webp',
+      'nama_produk':
+          'Mouse PC Gaming USB Komputer Laptop Led Rgb Foyu Lighting',
+      'harga': '2.393.100',
+      'rating': 0,
+      'penjualan': 0,
+      'lokasi': 'Tangerang Selatan',
+      'nama_toko': 'Panda Store',
+      'link_detail':
+          'https://www.bukalapak.com/p/komputer/aksesoris-226/mouse/4hppmzs-jual-mouse-pc-gaming-usb-komputer-laptop-led-rgb-foyu-lighting?from=list-product&pos=4'
+    },
+    {
+      'img': 'https://s2.bukalapak.com/img/73823199103/s-330-330/data.png.webp',
+      'nama_produk': 'Apple Accessories Magic Mouse 3/2021 Silver MK2E3 Resmi',
+      'harga': '3.293.000',
+      'rating': 4.7,
+      'penjualan': 'Terjual 33',
+      'lokasi': 'Jakarta Pusat',
+      'nama_toko': 'GorillaTech',
+      'link_detail':
+          'https://www.bukalapak.com/p/gorillatech/gadget-acc/adaptor-cables/4hoevxv-jual-apple-accessories-magic-mouse-3-2021-silver-mk2e3-resmi?from=list-product&pos=5'
+    },
+    {
+      'img': 'https://s1.bukalapak.com/img/62723199103/s-330-330/data.png.webp',
+      'nama_produk':
+          'Apple Accessories Magic Mouse Black Multi Touch Surface MMMQ3 Resmi',
+      'harga': '23.000',
+      'rating': 4.7,
+      'penjualan': 'Terjual 30',
+      'lokasi': 'Jakarta Pusat',
+      'nama_toko': 'GorillaTech',
+      'link_detail':
+          'https://www.bukalapak.com/p/gorillatech/gadget-acc/adaptor-cables/4hoevxy-jual-apple-accessories-magic-mouse-black-multi-touch-surface-mmmq3-resmi?from=list-product&pos=6'
+    },
   ];
 
-  final SearchController controller = SearchController();
-
-  List<String> searchhistory = [];
-
-  final List<Map<String, String>> _data = [
-    {
-      'imageUrl':
-          'https://images.tokopedia.net/img/cache/300-square/VqbcmM/2021/8/5/cb0ad05c-9278-49a4-a98a-ea06ad6925b0.png',
-      'name': 'Lipstick No 1 indonesia merdeka',
-      'price': 'Rp 100.000',
-      'status': 'selesai',
-    },
-    {
-      'imageUrl':
-          'https://images.tokopedia.net/img/cache/300-square/VqbcmM/2023/3/7/92ea7433-d238-4d7b-8823-d1096f79a9d9.png',
-      'name': 'Keju Mantap sekali',
-      'price': 'Rp 200.000',
-      'status': 'pengiriman',
-    },
-    {
-      'imageUrl':
-          'https://images.tokopedia.net/img/cache/300-square/product-1/2019/7/5/3453155/3453155_b49ba184-3041-444a-8708-ea65fd09ca78_1280_1280',
-      'name': 'Baju Buat Lebaran WOW cantik Sekali',
-      'price': 'Rp 300.000',
-      'status': 'tiba',
-    },
-    {
-      'imageUrl':
-          'https://images.tokopedia.net/img/cache/300-square/VqbcmM/2022/8/2/fec046b9-54c6-4b47-a114-2b50d41034b4.png',
-      'name': 'Earphpone Canggih Bikin telinga pecah',
-      'price': 'Rp 400.000',
-      'status': 'konfirmasi',
-    },
-    {
-      'imageUrl':
-          'https://images.tokopedia.net/img/cache/200-square/VqbcmM/2023/2/17/9e48a3b6-f313-4dae-8f6e-ffcabbf0e4ba.jpg',
-      'name': 'Dokter laser biar kena laser matammu',
-      'price': 'Rp 400.000',
-      'status': 'batal',
-    },
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('ListView dengan Kondisi'),
-      // ),
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, innerBoxIsScrolled) => [
-          SliverAppBar(
-            backgroundColor: Colors.orange,
-            automaticallyImplyLeading: false,
-            expandedHeight: 75.0,
-            pinned: false,
-            snap: true,
-            floating: true,
-            flexibleSpace: SizedBox(
-              height: 120, // Tinggi AppBar diatur disini
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    SearchAnchor(
-                      // dividerColor: Colors.amber,
-                      viewSurfaceTintColor: Colors.white,
-                      // MENGUBAH BACKGROUND COLOR
-                      isFullScreen: true,
-                      // viewBackgroundColor: Colors.white,
-
-                      searchController: controller,
-                      viewHintText: 'Search in History',
-                      viewTrailing: [
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              searchhistory.add(controller.text);
-                              searchhistory =
-                                  searchhistory.reversed.toSet().toList();
-                              controller.closeView(controller.text);
-                            });
-                          },
-                          icon: const Icon(Icons.search),
-                        ),
-                        IconButton(
-                            onPressed: () {
-                              controller.clear();
-                            },
-                            icon: const Icon(Icons.clear))
-                      ],
-                      builder: (context, controller) {
-                        return SearchBar(
-                          // backgroundColor:
-                          //     MaterialStateProperty.all<Color>(
-                          //   const Color(0xFF42A5F5),
-                          // ),
-                          constraints: BoxConstraints(
-                            minWidth: 300,
-                            minHeight: 40,
-                            maxWidth: 300,
-                            maxHeight: 40,
-                          ),
-                          side: MaterialStateProperty.all(BorderSide(
-                            color: Color(0xFFCACACA),
-                            width: 2.0,
-                            style: BorderStyle.solid,
-                          )),
-                          // backgroundColor: MaterialStateProperty.all(Colors.white),
-
-                          controller: controller,
-                          // leading: IconButton(
-                          //   onPressed: () {},
-                          //   icon: const Icon(Icons.search),
-                          // ),
-                          //untuk menambahkan icon di samping kanan search bar
-                          /*
-                              trailing: [
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.mic),
-                                ),
-                              ],
-                              */
-                          hintText: 'Search Your History',
-                          hintStyle:
-                              MaterialStateProperty.resolveWith<TextStyle?>(
-                                  (Set<MaterialState> states) {
-                            return TextStyle(
-                                color: Color(
-                                    0xFFCACACA)); // Change 'Colors.red' to any color you desire
-                          }),
-                          onTap: () => controller.openView(),
-                        );
-                      },
-                      suggestionsBuilder: (context, controller) {
-                        return [
-                          Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: Text('Recent History Searches'),
-                          ),
-                          Wrap(
-                            children:
-                                List.generate(searchhistory.length, (index) {
-                              final item = searchhistory[index];
-                              return Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: ChoiceChip(
-                                  side: BorderSide(color: Colors.white),
-                                  label: Text(item),
-                                  selected: item == controller.text,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(24.0))),
-                                  onSelected: (value) {
-                                    controller.text = item;
-                                    controller.closeView(item);
-                                  },
-                                ),
-                              );
-                            }),
-                          ),
-                          if (controller.text.isNotEmpty) ...[
-                            const Divider(),
-                            ListView.builder(
-                              shrinkWrap: true,
-                              // padding: EdgeInsets.only(bottom: 10000),
-                              itemCount: _data
-                                  .where((data) => (controller.text.isEmpty ||
-                                      data['name']
-                                          .toString()
-                                          .toLowerCase()
-                                          .contains(
-                                              controller.text.toLowerCase())))
-                                  .length,
-                              itemBuilder: (context, index) {
-                                final filtereddata = _data
-                                    .where((data) => (controller.text.isEmpty ||
-                                        data['name']
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(
-                                                controller.text.toLowerCase())))
-                                    .toList();
-
-                                final item = filtereddata[index];
-                                final status = item['status'];
-                                final name = item['name'];
-                                final price = item['price'];
-                                final img = item['imageUrl'];
-                                // final title = item['title'];
-
-                                if (status == 'selesai') {
-                                  return selesai(context, name ?? "",
-                                      price ?? "", img ?? "");
-                                } else if (status == 'pengiriman') {
-                                  return Pengiriman(context, name ?? "",
-                                      price ?? "", img ?? "");
-                                } else if (status == 'tiba') {
-                                  return Pesanantiba(context, name ?? "",
-                                      price ?? "", img ?? "");
-                                } else if (status == 'konfirmasi') {
-                                  return MenungguKonfrimasi(context, name ?? "",
-                                      price ?? "", img ?? "");
-                                } else {
-                                  return Dibatalkan(context, name ?? "",
-                                      price ?? "", img ?? "");
-                                } // Return empty container if no match found
-                              },
-                            ),
-                          ]
-                        ];
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-              // color: Colors.blue,
-              decoration: BoxDecoration(
-                color: Color(0xFFFF9900),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(0),
-                  topRight: Radius.circular(0),
-                  bottomLeft: Radius.circular(0),
-                  bottomRight: Radius.circular(150),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                      color: Color(0xFFFFB03A), // Warna bayangan
-                      spreadRadius: 12 // Jangkauan bayangan
-                      // blurRadius: 10, // Jarak blur bayangan
-                      // offset: Offset(4, 4), // Offset bayangan (x, y)
-                      ),
-                ],
-              ),
-              width: double.infinity,
-              height: 30.0,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 70,
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white, // Background color
-                      foregroundColor: Colors.orange, // Text and icon color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4), // Padding to make the button smaller
-                      textStyle: TextStyle(fontSize: 15), // Smaller text
-                      minimumSize: Size(70, 25),
-                    ),
-                    onPressed: () async {
-                      final List<String>? Filter =
-                          await showDialog<List<String>>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return FilterPopup(selectedFilters: selectedFilters);
-                        },
-                      );
-
-                      // Handle selected filters here
-                      if (Filter != null) {
-                        setState(() {
-                          selectedFilters = Filter;
-                        });
-                      }
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text('Filter'),
-                        SizedBox(
-                            width: 2), // Reduced space between text and icons
-                        Icon(Icons.filter_list, size: 15), // Smaller icons
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white, // Background color
-                      foregroundColor: Colors.orange, // Text and icon color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4), // Padding to make the button smaller
-                      textStyle: TextStyle(fontSize: 15), // Smaller text
-                      minimumSize: Size(70, 25),
-                    ),
-                    onPressed: () {
-                      // Action when the button is pressed
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text('Sort'),
-                        SizedBox(
-                            width: 2), // Reduced space between text and icons
-                        Icon(Icons.arrow_upward, size: 15), // Smaller icons
-                        Icon(Icons.arrow_downward, size: 15), // Smaller icons
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-        body: ListView.builder(
-          padding: EdgeInsets.only(top: 20, bottom: 20),
-          itemCount: _data
-              .where((data) =>
-                  selectedFilters!.contains(data['status']) &&
-                  (controller.text.isEmpty ||
-                      data['name']
-                          .toString()
-                          .toLowerCase()
-                          .contains(controller.text.toLowerCase())))
-              .length,
-          itemBuilder: (context, index) {
-            final filtereddata = _data
-                .where((data) =>
-                    selectedFilters!.contains(data['status']) &&
-                    (controller.text.isEmpty ||
-                        data['name']
-                            .toString()
-                            .toLowerCase()
-                            .contains(controller.text.toLowerCase())))
-                .toList();
-
-            final item = filtereddata[index];
-            final status = item['status'];
-            final name = item['name'];
-            final price = item['price'];
-            final img = item['imageUrl'];
-            // final title = item['title'];
-
-            if (status == 'selesai') {
-              return selesai(context, name ?? "", price ?? "", img ?? "");
-            } else if (status == 'pengiriman') {
-              return Pengiriman(context, name ?? "", price ?? "", img ?? "");
-            } else if (status == 'tiba') {
-              return Pesanantiba(context, name ?? "", price ?? "", img ?? "");
-            } else if (status == 'konfirmasi') {
-              return MenungguKonfrimasi(
-                  context, name ?? "", price ?? "", img ?? "");
-            } else {
-              return Dibatalkan(context, name ?? "", price ?? "", img ?? "");
-            } // Return empty container if no match found
-          },
-        ),
-      ),
-    );
+  sortProductsByPriceDescending(products);
+  // sortProductsByPriceAscending(products);
+  for (var product in products) {
+    print(product['nama_produk'] + ' - Rp ' + product['harga'].toString());
   }
-}
-
-selesai(BuildContext context, String title, String price, String url) {
-  return Container(
-    // color: Colors.red,
-    width: double.infinity,
-    margin: EdgeInsets.only(left: 15.0, bottom: 7.5, right: 15.0, top: 7.5),
-    child: InkWell(
-      onTap: () {
-        print("item di tekan");
-      },
-      child: Card(
-        elevation: 20,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-              10.0), // Border radius jika ingin border rounded
-          side: BorderSide(
-            color: Color(0xFFE5E5E5), // Warna border
-            width: 2.0, // Ketebalan border
-          ),
-        ),
-        // margin: EdgeInsets.all(10),
-        child: Container(
-          width: double.infinity,
-          // color: Colors.purple,
-          // padding: EdgeInsets.only(left: 10.0, right: 10.0),
-          height: 140,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(5),
-                  ),
-                ),
-                width: 120,
-                height: 120,
-                // color: Colors.grey,
-                margin: EdgeInsets.all(10),
-                // padding: EdgeInsets.all(0),
-                child: Image.network(
-                  '$url', // atau Image.network untuk gambar dari URL
-                  fit: BoxFit
-                      .cover, // Mengubah ini sesuai kebutuhan: cover, contain, fill, fitWidth, fitHeight
-                ),
-              ),
-              Container(
-                width: 177,
-                margin: EdgeInsets.only(top: 10, bottom: 10, right: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      overflow: TextOverflow.ellipsis,
-                      '$title',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    Text('$price'),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text('Penilaianmu'),
-                    Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(right: 4),
-                          child: Icon(
-                            Icons.star,
-                            color: Colors.black,
-                            size: 14,
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(right: 4),
-                          child: Icon(
-                            Icons.star,
-                            color: Colors.black,
-                            size: 14,
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(right: 4),
-                          child: Icon(
-                            Icons.star,
-                            color: Colors.black,
-                            size: 14,
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(right: 4),
-                          child: Icon(
-                            Icons.star,
-                            color: Colors.black,
-                            size: 14,
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(right: 4),
-                          child: Icon(
-                            Icons.star_half,
-                            color: Colors.black,
-                            size: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 17,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              // foregroundColor: Color(0xFFCACACA),
-                              backgroundColor: Color(0xFF19FF3E),
-                              elevation: 30,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(20, 30),
-                              shadowColor: Colors.black,
-                            ),
-                            onPressed: () {
-                              print('selesai');
-                            },
-                            child: Text(
-                              'Selesai',
-                              style: TextStyle(color: Colors.black),
-                            ))
-                      ],
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    ),
-  );
-}
-
-Pengiriman(BuildContext context, String title, String price, String url) {
-  return Container(
-    // color: Colors.red,
-    width: double.infinity,
-    margin: EdgeInsets.only(left: 15.0, bottom: 7.5, right: 15.0, top: 7.5),
-
-    child: InkWell(
-      onTap: () {
-        print("item di tekan");
-      },
-      child: Card(
-        elevation: 20,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-              10.0), // Border radius jika ingin border rounded
-          side: BorderSide(
-            color: Color(0xFFE5E5E5), // Warna border
-            width: 2.0, // Ketebalan border
-          ),
-        ),
-        // margin: EdgeInsets.all(10),
-        child: Container(
-          width: double.infinity,
-          // color: Colors.purple,
-          // padding: EdgeInsets.only(left: 10.0, right: 10.0),
-          height: 140,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(5),
-                  ),
-                ),
-                width: 120,
-                height: 120,
-                // color: Colors.grey,
-                margin: EdgeInsets.all(10),
-                // padding: EdgeInsets.all(0),
-                child: Image.network(
-                  '$url', // atau Image.network untuk gambar dari URL
-                  fit: BoxFit
-                      .cover, // Mengubah ini sesuai kebutuhan: cover, contain, fill, fitWidth, fitHeight
-                ),
-              ),
-              Container(
-                width: 177,
-                margin: EdgeInsets.only(top: 10, bottom: 10, right: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      overflow: TextOverflow.ellipsis,
-                      '$title',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    Text('$price'),
-                    SizedBox(
-                      height: 57,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.all(5),
-                              // foregroundColor: Color(0xFFCACACA),
-                              backgroundColor: Color(0xFFFF7A00),
-                              elevation: 30,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(20, 30),
-                              shadowColor: Colors.black,
-                            ),
-                            onPressed: () {
-                              print('dalam pengiriman');
-                            },
-                            child: Text(
-                              'Dalam Pengiriman',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 13),
-                            ))
-                      ],
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    ),
-  );
-}
-
-Pesanantiba(BuildContext context, String title, String price, String url) {
-  return Container(
-    // color: Colors.red,
-    width: double.infinity,
-    margin: EdgeInsets.only(left: 15.0, bottom: 7.5, right: 15.0, top: 7.5),
-
-    child: InkWell(
-      onTap: () {
-        print("item di tekan");
-      },
-      child: Card(
-        elevation: 20,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-              10.0), // Border radius jika ingin border rounded
-          side: BorderSide(
-            color: Color(0xFFE5E5E5), // Warna border
-            width: 2.0, // Ketebalan border
-          ),
-        ),
-        // margin: EdgeInsets.all(10),
-        child: Container(
-          width: double.infinity,
-          // color: Colors.purple,
-          // padding: EdgeInsets.only(left: 10.0, right: 10.0),
-          height: 140,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(5),
-                  ),
-                ),
-                width: 120,
-                height: 120,
-                // color: Colors.grey,
-                margin: EdgeInsets.all(10),
-                // padding: EdgeInsets.all(0),
-                child: Image.network(
-                  '$url',
-                  fit: BoxFit
-                      .cover, // Mengubah ini sesuai kebutuhan: cover, contain, fill, fitWidth, fitHeight
-                ),
-              ),
-              Container(
-                width: 177,
-                margin: EdgeInsets.only(top: 10, bottom: 10, right: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      overflow: TextOverflow.ellipsis,
-                      '$title',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    Text('$price'),
-                    SizedBox(
-                      height: 57,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.all(5),
-                              // foregroundColor: Color(0xFFCACACA),
-                              backgroundColor: Color(0xFF19FF3E),
-                              elevation: 30,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(20, 30),
-                              shadowColor: Colors.black,
-                            ),
-                            onPressed: () {
-                              print('Pesanan tiba');
-                            },
-                            child: Text(
-                              'Pesanan Tiba',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 13),
-                            ))
-                      ],
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    ),
-  );
-}
-
-MenungguKonfrimasi(
-    BuildContext context, String title, String price, String url) {
-  return Container(
-    // color: Colors.red,
-    width: double.infinity,
-    margin: EdgeInsets.only(left: 15.0, bottom: 7.5, right: 15.0, top: 7.5),
-
-    child: InkWell(
-      onTap: () {
-        print("item di tekan");
-      },
-      child: Card(
-        elevation: 20,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-              10.0), // Border radius jika ingin border rounded
-          side: BorderSide(
-            color: Color(0xFFE5E5E5), // Warna border
-            width: 2.0, // Ketebalan border
-          ),
-        ),
-        // margin: EdgeInsets.all(10),
-        child: Container(
-          width: double.infinity,
-          // color: Colors.purple,
-          // padding: EdgeInsets.only(left: 10.0, right: 10.0),
-          height: 140,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(5),
-                  ),
-                ),
-                width: 120,
-                height: 120,
-                // color: Colors.grey,
-                margin: EdgeInsets.all(10),
-                // padding: EdgeInsets.all(0),
-                child: Image.network(
-                  '$url',
-                  fit: BoxFit
-                      .cover, // Mengubah ini sesuai kebutuhan: cover, contain, fill, fitWidth, fitHeight
-                ),
-              ),
-              Container(
-                width: 177,
-                margin: EdgeInsets.only(top: 10, bottom: 10, right: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      overflow: TextOverflow.ellipsis,
-                      '$title',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    Text('$price'),
-                    SizedBox(
-                      height: 57,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.all(5),
-                              // foregroundColor: Color(0xFFCACACA),
-                              backgroundColor: Color(0xFFFF7A00),
-                              elevation: 30,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(20, 30),
-                              shadowColor: Colors.black,
-                            ),
-                            onPressed: () {
-                              print('menunggu konfirmasi');
-                            },
-                            child: Text(
-                              'Menunggu Konfirmasi',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 13),
-                            ))
-                      ],
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    ),
-  );
-}
-
-Dibatalkan(BuildContext context, String title, String price, String url) {
-  return Container(
-    // color: Colors.red,
-    width: double.infinity,
-    margin: EdgeInsets.only(left: 15.0, bottom: 7.5, right: 15.0, top: 7.5),
-
-    child: InkWell(
-      onTap: () {
-        print("item di tekan");
-      },
-      child: Card(
-        elevation: 20,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-              10.0), // Border radius jika ingin border rounded
-          side: BorderSide(
-            color: Color(0xFFE5E5E5), // Warna border
-            width: 2.0, // Ketebalan border
-          ),
-        ),
-        // margin: EdgeInsets.all(10),
-        child: Container(
-          width: double.infinity,
-          // color: Colors.purple,
-          // padding: EdgeInsets.only(left: 10.0, right: 10.0),
-          height: 140,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(5),
-                  ),
-                ),
-                width: 120,
-                height: 120,
-                // color: Colors.grey,
-                margin: EdgeInsets.all(10),
-                // padding: EdgeInsets.all(0),
-                child: Image.network(
-                  '$url',
-                  fit: BoxFit
-                      .cover, // Mengubah ini sesuai kebutuhan: cover, contain, fill, fitWidth, fitHeight
-                ),
-              ),
-              Container(
-                width: 177,
-                margin: EdgeInsets.only(top: 10, bottom: 10, right: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      overflow: TextOverflow.ellipsis,
-                      '$title',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    Text('$price'),
-                    SizedBox(
-                      height: 57,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.all(5),
-                              // foregroundColor: Color(0xFFCACACA),
-                              backgroundColor: Color(0xFFFF1F00),
-                              elevation: 30,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(20, 30),
-                              shadowColor: Colors.black,
-                            ),
-                            onPressed: () {
-                              print('dibatalkan');
-                            },
-                            child: Text(
-                              'Pesanan Dibatalkan',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 13),
-                            ))
-                      ],
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    ),
-  );
 }

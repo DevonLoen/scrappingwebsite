@@ -318,11 +318,13 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
     print(widget.harga);
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
         title: const Text(
-          "My Cart",
+          "My Item",
           style: TextStyle(color: Colors.white),
         ),
+        centerTitle: true,
+
         backgroundColor: const Color(0xFFFF9900),
       ),
       bottomNavigationBar: Container(

@@ -2,10 +2,12 @@
 
 import 'dart:convert';
 
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:scrappingwebsite/dashboard_screen.dart';
 import 'package:scrappingwebsite/filterpopup.dart';
 import 'package:scrappingwebsite/sortpopup.dart';
 import 'package:scrappingwebsite/tian/detailPageScreen.dart';
@@ -19,104 +21,103 @@ class Item_Screen extends StatefulWidget {
 }
 
 class _Item_ScreenState extends State<Item_Screen> {
-  int _selectedindex = 0;
+  int _selectedindex = 2;
 
   String selectedSort = 'termurah';
   final SearchController controller = SearchController();
 
   List<String> searchhistory = [];
-  void sorttermurah(List<Map<String, dynamic>> data) {
-    data.sort((a, b) {
-      try {
-        // Extracting and cleaning price strings
-        String priceStringA =
-            a['harga']!.replaceAll('Rp ', '').replaceAll(',', '');
-        String priceStringB =
-            b['harga']!.replaceAll('Rp ', '').replaceAll(',', '');
+  // void sorttermurah(List<Map<String, dynamic>> data) {
+  //   data.sort((a, b) {
+  //     try {
+  //       // Extracting and cleaning price strings
+  //       String priceStringA =
+  //           a['harga']!.replaceAll('Rp ', '').replaceAll(',', '');
+  //       String priceStringB =
+  //           b['harga']!.replaceAll('Rp ', '').replaceAll(',', '');
 
-        // Parsing prices into integers
-        int priceA = int.parse(priceStringA);
-        int priceB = int.parse(priceStringB);
+  //       // Parsing prices into integers
+  //       int priceA = int.parse(priceStringA);
+  //       int priceB = int.parse(priceStringB);
 
-        // Sorting in ascending order based on price (from lowest to highest)
-        return priceA.compareTo(priceB);
-      } catch (e) {
-        print('Error parsing price: $e');
-        return 0; // or handle error as needed
-      }
-    });
+  //       // Sorting in ascending order based on price (from lowest to highest)
+  //       return priceA.compareTo(priceB);
+  //     } catch (e) {
+  //       print('Error parsing price: $e');
+  //       return 0; // or handle error as needed
+  //     }
+  //   });
+  // }
+  void sorttermurah(List<dynamic> products) {
+    products.sort((a, b) => double.parse(a['harga']
+            .replaceAll('Rp', '')
+            .replaceAll('.', '')
+            .replaceAll(',', '.')
+            .trim())
+        .compareTo(double.parse(b['harga']
+            .replaceAll('Rp', '')
+            .replaceAll('.', '')
+            .replaceAll(',', '.')
+            .trim())));
   }
 
-  void sorttermahal(List<Map<String, dynamic>> data) {
-    data.sort((a, b) {
-      try {
-        // Extracting and cleaning price strings
-        String priceStringA =
-            a['harga']!.replaceAll('Rp ', '').replaceAll(',', '');
-        String priceStringB =
-            b['harga']!.replaceAll('Rp ', '').replaceAll(',', '');
-
-        // Parsing prices into integers
-        int priceA = int.parse(priceStringA);
-        int priceB = int.parse(priceStringB);
-
-        // Sorting in descending order based on price
-        return priceB.compareTo(priceA);
-      } catch (e) {
-        print('Error parsing price: $e');
-        return 0; // or handle error as needed
-      }
-    });
+  void sorttermahal(List<dynamic> products) {
+    products.sort((a, b) => double.parse(b['harga']
+            .replaceAll('Rp', '')
+            .replaceAll('.', '')
+            .replaceAll(',', '.')
+            .trim())
+        .compareTo(double.parse(a['harga']
+            .replaceAll('Rp', '')
+            .replaceAll('.', '')
+            .replaceAll(',', '.')
+            .trim())));
   }
 
-  final List<Map<String, dynamic>> products = [
-    {
-      'name': 'Product 1',
-      'price': 'Rp 100,000',
-      'rating': 4.5,
-      'city': 'Jakarta',
-      'source': 'Tokopedia'
-    },
-    {
-      'name': 'Product 2',
-      'price': 'Rp 200,000',
-      'rating': 4.0,
-      'city': 'Bandung',
-      'source': 'Bukalapak'
-    },
-    {
-      'name': 'Product 3',
-      'price': 'Rp 300,000',
-      'rating': 4.8,
-      'city': 'Surabaya',
-      'source': 'Bukalapak'
-    },
-    {
-      'name': 'Product 4',
-      'price': 'Rp 400,000',
-      'rating': 3.5,
-      'city': 'Medan',
-      'source': 'Bukalapak'
-    },
-    {
-      'name': 'Product 5',
-      'price': 'Rp 500,000',
-      'rating': 4.9,
-      'city': 'Yogyakarta',
-      'source': 'Tokopedia'
-    },
-  ];
-
-  void mengurutkan() {
+  void mengurutkan(List<dynamic> products, List<dynamic> products2) {
     if (selectedSort == 'termurah') {
       print('ini');
       sorttermurah(products);
-      // sorttermurah(data2);
+      sorttermurah(products2);
     } else {
       sorttermahal(products);
-      // sorttermahal(data2);
+      sorttermahal(products2);
     }
     print('mengurutkan');
+  }
+
+  void bottomNavigation(int _selectedIndex) {
+    if (_selectedIndex == 0) {
+      setState(() {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Dashboard_screen(
+                    selectedIndex: 0,
+                  )),
+        );
+      });
+    } else if (_selectedIndex == 1) {
+      setState(() {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Dashboard_screen(
+                    selectedIndex: 1,
+                  )),
+        );
+      });
+    } else if (_selectedIndex == 3) {
+      setState(() {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Dashboard_screen(
+                    selectedIndex: 3,
+                  )),
+        );
+      });
+    } else {}
   }
 
   late SharedPreferences prefs;
@@ -147,14 +148,17 @@ class _Item_ScreenState extends State<Item_Screen> {
     final tokopediaProducts = productsResult == forNullMap
         ? []
         : productsResult!['tokopedia'] as List<Map<String, dynamic>>;
+
+    final Products = tokopediaProducts + bukalapakProducts;
     print('bukalapakProductTes.runtimeType');
     print(tokopediaProducts);
+    mengurutkan(tokopediaProducts, bukalapakProducts);
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.red,
-        title: Text('product page'),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.red,
+      //   title: Text('product page'),
+      // ),
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, innerBoxIsScrolled) => [
           SliverAppBar(
@@ -162,7 +166,7 @@ class _Item_ScreenState extends State<Item_Screen> {
             automaticallyImplyLeading: false,
             expandedHeight: 75.0,
             pinned: false,
-            snap: true,
+            snap: false,
             floating: true,
             flexibleSpace: SizedBox(
               height: 120, // Tinggi AppBar diatur disini
@@ -276,12 +280,27 @@ class _Item_ScreenState extends State<Item_Screen> {
                               shrinkWrap: true,
                               // padding: EdgeInsets.only(bottom: 10000),
                               // scrollDirection: acxis,
-                              itemCount: products.length,
-                              itemBuilder: (context, index) => Product(
-                                  context: context,
-                                  product: products,
-                                  index: index,
-                                  MarketplaceName: ""),
+                              itemCount: Products.where((nama_produk) =>
+                                  (controller.text.isEmpty ||
+                                      nama_produk['nama_produk']
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(controller.text
+                                              .toLowerCase()))).length,
+                              itemBuilder: (context, index) {
+                                final filteredproducts = Products.where(
+                                    (nama_produk) => (controller.text.isEmpty ||
+                                        nama_produk['nama_produk']
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(controller.text
+                                                .toLowerCase()))).toList();
+                                return Product(
+                                    context: context,
+                                    product: filteredproducts,
+                                    index: index,
+                                    MarketplaceName: "");
+                              },
                             ),
                           ]
                         ];
@@ -345,9 +364,8 @@ class _Item_ScreenState extends State<Item_Screen> {
                         setState(() {
                           print('helo');
                           selectedSort = Sort;
-                          mengurutkan();
+                          mengurutkan(tokopediaProducts, bukalapakProducts);
                           print('berhasil');
-                          print(products);
                         });
                       }
                     },
@@ -367,65 +385,83 @@ class _Item_ScreenState extends State<Item_Screen> {
             ),
           ),
         ],
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 30,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(
-                'Tokopedia',
-                style: TextStyle(fontSize: 20),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 30,
               ),
-            ),
-            Container(
-              // color: Colors.red,
-              height: 250, // Set a fixed height for the horizontal ListView
-              child: ListView.builder(
-                scrollDirection:
-                    Axis.horizontal, // Set the scroll direction to horizontal
-                itemCount:
-                    tokopediaProducts.length, // Number of items in the list
-                itemBuilder: (context, index) {
-                  return Product(
-                      context: context,
-                      product: tokopediaProducts,
-                      index: index,
-                      MarketplaceName: "tokopedia");
-                },
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  'Tokopedia',
+                  style: TextStyle(fontSize: 20),
+                ),
               ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(
-                'BukaLapak',
-                style: TextStyle(fontSize: 20),
+              Container(
+                // color: Colors.red,
+                height: 250, // Set a fixed height for the horizontal ListView
+                child: ListView.builder(
+                  scrollDirection:
+                      Axis.horizontal, // Set the scroll direction to horizontal
+                  itemCount:
+                      tokopediaProducts.length, // Number of items in the list
+                  itemBuilder: (context, index) {
+                    return Product(
+                        context: context,
+                        product: tokopediaProducts,
+                        index: index,
+                        MarketplaceName: "tokopedia");
+                  },
+                ),
               ),
-            ),
-            Container(
-              // color: Colors.red,
-              height: 250, // Set a fixed height for the horizontal ListView
-              child: ListView.builder(
-                scrollDirection:
-                    Axis.horizontal, // Set the scroll direction to horizontal
-                itemCount:
-                    bukalapakProducts!.length, // Number of items in the list
-                itemBuilder: (context, index) {
-                  return Product(
-                      context: context,
-                      product: bukalapakProducts,
-                      index: index,
-                      MarketplaceName: "bukalapak");
-                },
+              SizedBox(
+                height: 30,
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  'BukaLapak',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              Container(
+                // color: Colors.red,
+                height: 250, // Set a fixed height for the horizontal ListView
+                child: ListView.builder(
+                  scrollDirection:
+                      Axis.horizontal, // Set the scroll direction to horizontal
+                  itemCount:
+                      bukalapakProducts!.length, // Number of items in the list
+                  itemBuilder: (context, index) {
+                    return Product(
+                        context: context,
+                        product: bukalapakProducts,
+                        index: index,
+                        MarketplaceName: "bukalapak");
+                  },
+                ),
+              ),
+              // SizedBox(
+              //   height: 100,
+              // )
+            ],
+          ),
         ),
+      ),
+      bottomNavigationBar: ConvexAppBar(
+        style: TabStyle.reactCircle,
+        color: Colors.white,
+        backgroundColor: Colors.orange,
+        items: [
+          TabItem(icon: Icons.description_outlined),
+          TabItem(icon: Icons.shopping_cart_outlined),
+          TabItem(icon: Icons.home_outlined),
+          TabItem(icon: Icons.person_outlined),
+        ],
+        initialActiveIndex: _selectedindex,
+        onTap: bottomNavigation,
       ),
     );
   }

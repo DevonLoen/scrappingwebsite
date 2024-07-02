@@ -43,7 +43,9 @@ class MyApp extends StatelessWidget {
           initialRoute: this.isLoggedIn ? "/HomeScreen" : "/",
           routes: {
             '/': (context) => Welcome_screen(),
-            '/HomeScreen': (context) => Dashboard_screen(),
+            '/HomeScreen': (context) => Dashboard_screen(
+                  selectedIndex: 2,
+                ),
             "/PurchasePage": (context) => PurchasePage(),
             "/itemsResult": (context) => Item_Screen()
           },
