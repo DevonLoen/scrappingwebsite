@@ -1,16 +1,49 @@
-# scrappingwebsite
+**Project Backend**
 
-A new Flutter project.
+1. **Clone Project:**
 
-## Getting Started
+   - Jalankan perintah berikut untuk mengkloning project backend:
+     ```bash
+     git clone [https://github.com/Christian-Tiovanto/BE-Scrapping-AI.git](https://github.com/Christian-Tiovanto/BE-Scrapping-AI.git)
+     ```
 
-This project is a starting point for a Flutter application.
+2. **Konfigurasi Variabel Lingkungan:**
 
-A few resources to get you started if this is your first Flutter project:
+   - Buat file bernama `.env`.
+   - Salin semua variabel dari `.env.example` ke dalam `.env`.
+   - Pastikan untuk menyesuaikan nilai variabel dengan kebutuhan Anda.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+3. **Instalasi Package:**
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+   - Instal package yang dibutuhkan project dengan menjalankan perintah berikut:
+     ```bash
+     npm install
+     ```
+
+4. **Menjalankan Project:**
+   - Jalankan project backend dengan menjalankan perintah berikut:
+     ```bash
+     npm run start
+     ```
+
+**Project Mobile**
+
+1. **Clone Project:**
+
+   - Jalankan perintah berikut untuk mengkloning project mobile:
+     ```bash
+     git clone [https://github.com/DevonLoen/scrappingwebsite.git](https://github.com/DevonLoen/scrappingwebsite.git)
+     ```
+
+2. **Instalasi Package:**
+
+   - Instal package yang dibutuhkan project dengan menjalankan perintah berikut:
+     ```bash
+     flutter pub get
+     ```
+
+3. **Menjalankan Project:**
+   - Jalankan project mobile dengan menjalankan perintah berikut:
+     ```bash
+     flutter run
+     ```
