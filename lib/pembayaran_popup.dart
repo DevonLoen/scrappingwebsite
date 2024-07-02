@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:scrappingwebsite/dashboard_screen.dart';
 import 'package:scrappingwebsite/devon/home_screen.dart';
 import 'package:scrappingwebsite/tian/cartListProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -162,13 +163,13 @@ class _Pembayaran_popupState extends State<Pembayaran_popup> {
                     print(element.itemId);
                     final response = await http.put(
                         Uri.parse(
-                            'http://localhost:3000/api/v1/items/buy/${element.itemId}?jumlah=${element.itemTotal}'),
+                            'http://localhost:3000/api/v1/items/buy/${element.itemId}'),
                         headers: <String, String>{
                           'Content-Type': 'application/json; charset=UTF-8',
                           "Authorization": prefs.getString('token')!
                         },
                         body: jsonEncode(<String, String>{
-                          "metode_pemayaran": widget.metode_pembayaran,
+                          "metode_pembayaran": widget.metode_pembayaran,
                           "alamat": widget.alamat,
                           "delivery_options": widget.delivery_options,
                         }));
@@ -182,11 +183,14 @@ class _Pembayaran_popupState extends State<Pembayaran_popup> {
                     }
                   });
 
-                  // Navigator.pushAndRemoveUntil(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => Home_screen()),
-                  //   (route) => false, //
-                  // );
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Dashboard_screen(
+                              selectedIndex: 2,
+                            )),
+                    (route) => false, //
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   // minimumSize: Size(100, 2),
