@@ -29,36 +29,62 @@ class _History_screenState extends State<History_screen> {
     'selesai',
     'pengiriman',
     'tiba',
+    // 'beli',
     'beli',
-    'konfirmasi',
     'batal'
   ];
 
   final SearchController controller = SearchController();
 
   List<String> searchhistory = [];
-
   void sorttermurah(List<Map<String, dynamic>> data) {
-    data.sort((a, b) {
-      // Menghapus 'Rp ' dan mengubah string harga menjadi int untuk perbandingan
-      int priceA =
-          int.parse(a['price']!.replaceAll('Rp ', '').replaceAll('.', ''));
-      int priceB =
-          int.parse(b['price']!.replaceAll('Rp ', '').replaceAll('.', ''));
-      return priceA.compareTo(priceB);
-    });
+    try {
+      data.sort((a, b) => a['item']['harga'].compareTo(b['item']['harga']));
+      print('ini sudah tersort');
+      print(data);
+    } catch (e) {
+      print('Error sorting data: $e');
+    }
   }
 
   void sorttermahal(List<Map<String, dynamic>> data) {
-    data.sort((a, b) {
-      // Menghapus 'Rp ' dan mengubah string harga menjadi int untuk perbandingan
-      int priceA =
-          int.parse(a['price']!.replaceAll('Rp ', '').replaceAll('.', ''));
-      int priceB =
-          int.parse(b['price']!.replaceAll('Rp ', '').replaceAll('.', ''));
-      return priceB.compareTo(priceA);
-    });
+    try {
+      data.sort((a, b) => b['item']['harga'].compareTo(a['item']['harga']));
+
+      print('ini sudah tersort');
+      print(data);
+    } catch (e) {
+      print('Error sorting data: $e');
+    }
   }
+
+  // void sorttermahal(List<dynamic> products) {
+  //   print('sort');
+  //   products.sort((a, b) => double.parse(b['harga']
+  //           .replaceAll('Rp', '')
+  //           .replaceAll('.', '')
+  //           .replaceAll(',', '.')
+  //           .trim())
+  //       .compareTo(double.parse(a['harga']
+  //           .replaceAll('Rp', '')
+  //           .replaceAll('.', '')
+  //           .replaceAll(',', '.')
+  //           .trim())));
+  // }
+
+  // void sorttermurah(List<dynamic> products) {
+  //   print('sort');
+  //   products.sort((a, b) => double.parse(a['harga']
+  //           .replaceAll('Rp', '')
+  //           .replaceAll('.', '')
+  //           .replaceAll(',', '.')
+  //           .trim())
+  //       .compareTo(double.parse(b['harga']
+  //           .replaceAll('Rp', '')
+  //           .replaceAll('.', '')
+  //           .replaceAll(',', '.')
+  //           .trim())));
+  // }
 
   // final List<Map<String, String>> _data = [
   //   {
@@ -98,25 +124,23 @@ class _History_screenState extends State<History_screen> {
   //   },
   // ];
 
-  void mengurutkan() {
+  void mengurutkan(List<Map<String, dynamic>> products) {
+    print('asem');
     if (selectedSort == 'termurah') {
-      sorttermurah(_data);
+      print('termurah');
+      sorttermurah(products);
     } else {
-      sorttermahal(_data);
+      sorttermahal(products);
     }
     print('mengurutkan');
+    setState(() {});
   }
 
   List<Map<String, dynamic>> _data = [];
   void fetchHistory() async {
     try {
-      print('ea');
       final result = await getHistory();
-      print('result di page history');
-      print(result);
       _data = result;
-      print("_data[0]['item']");
-      print(_data[0]['item']['nama_toko']);
       setState(() {});
     } catch (e) {
       print(e);
@@ -127,13 +151,14 @@ class _History_screenState extends State<History_screen> {
   void initState() {
     super.initState();
     fetchHistory();
-    mengurutkan();
+    // mengurutkan(_data);
   }
 
   @override
   Widget build(BuildContext context) {
-    print("masak ini");
     try {
+      mengurutkan(_data);
+
       return Scaffold(
         // appBar: AppBar(
         //   automaticallyImplyLeading: false,
@@ -262,7 +287,7 @@ class _History_screenState extends State<History_screen> {
                                 // padding: EdgeInsets.only(bottom: 10000),
                                 itemCount: _data
                                     .where((data) => (controller.text.isEmpty ||
-                                        data['name']
+                                        data['item']['nama_produk']
                                             .toString()
                                             .toLowerCase()
                                             .contains(
@@ -272,21 +297,23 @@ class _History_screenState extends State<History_screen> {
                                   final filtereddata = _data
                                       .where((data) =>
                                           (controller.text.isEmpty ||
-                                              data['name']
+                                              data['item']['nama_produk']
                                                   .toString()
                                                   .toLowerCase()
                                                   .contains(controller.text
                                                       .toLowerCase())))
                                       .toList();
 
-                                  final item = filtereddata[index];
-                                  final status = item[index]['status'];
-                                  final name = item[index]['nama_produk'];
-                                  final price = item[index]['harga'];
-                                  final img = item[index]['image_url'];
+                                  final item = filtereddata;
+                                  final status = item[index]['item']['status'];
+                                  final name =
+                                      item[index]['item']['nama_produk'];
+                                  final price = item[index]['item']['harga'];
+                                  final img = item[index]['item']['image_url'];
                                   // final title = item['title'];
-
+                                  // print(status);
                                   if (status == 'beli') {
+                                    // print('eaaaaaaaaaaaaaaaa');
                                     return selesai(context, name ?? "",
                                         price ?? "", img ?? "");
                                   }
@@ -396,7 +423,7 @@ class _History_screenState extends State<History_screen> {
                         if (Sort != null) {
                           setState(() {
                             selectedSort = Sort;
-                            mengurutkan();
+                            mengurutkan(_data);
                           });
                         }
                       },
@@ -419,41 +446,36 @@ class _History_screenState extends State<History_screen> {
           body: ListView.builder(
               padding: EdgeInsets.only(top: 20, bottom: 20),
               itemCount: _data.where((data) {
-                print('data eaaa');
-                print(data);
-                print(data['item']['status']);
+                // print('data eaaa');
+                // print(data);
+                // print(data['item']['status']);
                 return selectedFilters!.contains(data['item']['status']) &&
                     (controller.text.isEmpty ||
-                        data['name']
+                        data['item']['nama_produk']
                             .toString()
                             .toLowerCase()
                             .contains(controller.text.toLowerCase()));
               }).length,
               itemBuilder: (context, index) {
-                print('aabbbbcccc');
                 final filtereddata = _data
                     .where((data) =>
                         selectedFilters!.contains(data['item']['status']) &&
                         (controller.text.isEmpty ||
-                            data['name']
+                            data['item']['nama_produk']
                                 .toString()
                                 .toLowerCase()
                                 .contains(controller.text.toLowerCase())))
                     .toList();
 
-                print('siap aabbbbccc');
-                print(filtereddata);
                 final item = filtereddata;
-                print('siap aabbbbccc2');
-                print(item[index]);
                 final status = item[index]['item']['status'];
                 final name = item[index]['item']['nama_produk'];
                 final price = item[index]['item']['harga'];
                 final img = item[index]['item']['image_url'];
                 // final title = item['title'];
-                print(status);
+                // print(status);
                 if (status == 'beli') {
-                  print('eaaaaaaaaaaaaaaaa');
+                  // print('eaaaaaaaaaaaaaaaa');
                   return selesai(context, name ?? "", price ?? "", img ?? "");
                 }
                 ;

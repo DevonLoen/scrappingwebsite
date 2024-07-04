@@ -223,6 +223,7 @@ class _Login_screenState extends State<Login_screen> {
                 await Provider.of<Auth>(context, listen: false).login(
                     _emailController.text, _passwordController.text, context);
               } catch (e) {
+                print(e);
                 AwesomeDialog(
                   context: context,
                   animType: AnimType.scale,

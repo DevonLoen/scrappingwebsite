@@ -433,7 +433,7 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                   height: 5,
                 ),
                 DetailPickerWidget(
-                  list: colortype,
+                  list: colortype.isNotEmpty ? colortype : ['-'],
                   colorPick: true,
                 ),
                 SizedBox(
@@ -444,7 +444,7 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                   height: 5,
                 ),
                 DetailPickerWidget(
-                  list: size,
+                  list: size.isNotEmpty ? size : ['-'],
                   colorPick: false,
                 ),
                 SizedBox(
@@ -461,7 +461,7 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
                             WidgetSpan(
                               child: Text(
                                 // '• ${DeskripsiList[index]}',
-                                description,
+                                description.isNotEmpty ? description : '',
                                 style: TextStyle(fontSize: 15),
                               ), // Bullet character
                             ),

@@ -36,7 +36,7 @@ class _FilterPopupState extends State<FilterPopup> {
     }
 
     if (widget.selectedFilters != null &&
-        widget.selectedFilters!.contains('konfirmasi')) {
+        widget.selectedFilters!.contains('beli')) {
       _option4 = true;
     }
 
@@ -80,7 +80,7 @@ class _FilterPopupState extends State<FilterPopup> {
               },
             ),
             CheckboxListTile(
-              title: Text('konfirmasi'),
+              title: Text('beli'),
               value: _option4,
               onChanged: (value) {
                 setState(() {
@@ -123,7 +123,7 @@ class _FilterPopupState extends State<FilterPopup> {
             }
 
             if (_option4) {
-              selectedFilters.add('konfirmasi');
+              selectedFilters.add('beli');
             }
 
             if (_option5) {

@@ -405,12 +405,24 @@ class _Item_ScreenState extends State<Item_Screen> {
                 child: ListView.builder(
                   scrollDirection:
                       Axis.horizontal, // Set the scroll direction to horizontal
-                  itemCount:
-                      tokopediaProducts.length, // Number of items in the list
+                  itemCount: tokopediaProducts
+                      .where((nama_produk) => (controller.text.isEmpty ||
+                          nama_produk['nama_produk']
+                              .toString()
+                              .toLowerCase()
+                              .contains(controller.text.toLowerCase())))
+                      .length, // Number of items in the list, // Number of items in the list
                   itemBuilder: (context, index) {
+                    final filteredtokopedia = tokopediaProducts
+                        .where((nama_produk) => (controller.text.isEmpty ||
+                            nama_produk['nama_produk']
+                                .toString()
+                                .toLowerCase()
+                                .contains(controller.text.toLowerCase())))
+                        .toList();
                     return Product(
                         context: context,
-                        product: tokopediaProducts,
+                        product: filteredtokopedia,
                         index: index,
                         MarketplaceName: "tokopedia");
                   },
@@ -432,12 +444,24 @@ class _Item_ScreenState extends State<Item_Screen> {
                 child: ListView.builder(
                   scrollDirection:
                       Axis.horizontal, // Set the scroll direction to horizontal
-                  itemCount:
-                      bukalapakProducts!.length, // Number of items in the list
+                  itemCount: bukalapakProducts
+                      .where((nama_produk) => (controller.text.isEmpty ||
+                          nama_produk['nama_produk']
+                              .toString()
+                              .toLowerCase()
+                              .contains(controller.text.toLowerCase())))
+                      .length, // Number of items in the list
                   itemBuilder: (context, index) {
+                    final filteredbukalapak = bukalapakProducts
+                        .where((nama_produk) => (controller.text.isEmpty ||
+                            nama_produk['nama_produk']
+                                .toString()
+                                .toLowerCase()
+                                .contains(controller.text.toLowerCase())))
+                        .toList();
                     return Product(
                         context: context,
-                        product: bukalapakProducts,
+                        product: filteredbukalapak,
                         index: index,
                         MarketplaceName: "bukalapak");
                   },
