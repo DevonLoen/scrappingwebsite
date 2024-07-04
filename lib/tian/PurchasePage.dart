@@ -319,6 +319,10 @@ class _PurchasePageState extends State<PurchasePage> {
           showDialog<String>(
             context: context,
             builder: (BuildContext context) {
+              List.generate(CheckedCartListTes.length, (indexItem) {
+                totalPrice += (CheckedCartListTes[indexItem].itemPrice as int) *
+                    CheckedCartListTes[indexItem].itemTotal as int;
+              });
               return Pembayaran_popup(
                 cartList: CheckedCartListTes,
                 name:
@@ -326,7 +330,7 @@ class _PurchasePageState extends State<PurchasePage> {
                 number: '${decodedToken['phone_number']}',
                 rekening: '83759656658',
                 item: "Product",
-                total: '${formatter.format(totalPrice + deliveryPrice + 5000)}',
+                total: '${(totalPrice + deliveryPrice + 5000)}',
                 alamat: "Jl. M. H. Thamrin, Nomor 100A",
                 metode_pembayaran: selectedPayment!,
                 delivery_options: deliveryOptions[selectedDeliveryOptions!]
@@ -489,17 +493,17 @@ class CartOrderWidget extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Subtotal Items",
-                              style: TextStyle(fontSize: 14),
-                            ),
-                            Text('RP. ${price}',
-                                style: TextStyle(fontSize: 14)),
-                          ],
-                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     Text(
+                        //       "Subtotal Items",
+                        //       style: TextStyle(fontSize: 14),
+                        //     ),
+                        //     Text('RP. ${price}',
+                        //         style: TextStyle(fontSize: 14)),
+                        //   ],
+                        // ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

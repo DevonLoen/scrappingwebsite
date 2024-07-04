@@ -306,7 +306,7 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
       // Show error notification
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Gagal memasukkan ke keranjang"),
+          content: Text("Berhasil memasukkan ke keranjang"),
           backgroundColor: Colors.red,
         ),
       );
