@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+// import "dart:ffi";
 import "dart:html";
 
 import "package:flutter/cupertino.dart";
@@ -58,6 +59,8 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
     fetchData();
     rating = BulatkanRating();
   }
+
+  bool fetchfinish = false;
 
   int BulatkanRating() {
     String nilaiString = widget.rating;
@@ -171,6 +174,7 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
         size = data['size'];
         description = data['description'];
         colortype = translateColorsToEnglish(data['color']);
+        fetchfinish = true;
       });
 
       print('Fetched data:');
@@ -316,165 +320,170 @@ class _DetailPageWidgetState extends State<DetailPageWidget> {
   @override
   Widget build(BuildContext context) {
     print(widget.harga);
-    return Scaffold(
-      appBar: AppBar(
-        // automaticallyImplyLeading: false,
-        title: const Text(
-          "My Item",
-          style: TextStyle(color: Colors.white),
-        ),
-        centerTitle: true,
-
-        backgroundColor: const Color(0xFFFF9900),
-      ),
-      bottomNavigationBar: Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: _addItemToCart,
-              child: const Text(
-                "KERANJANG",
+    return fetchfinish
+        ? Scaffold(
+            appBar: AppBar(
+              // automaticallyImplyLeading: false,
+              title: const Text(
+                "My Item",
                 style: TextStyle(color: Colors.white),
               ),
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(const Color(0xFFFF9900)),
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    side: BorderSide(color: Colors.white),
-                    borderRadius:
-                        BorderRadius.circular(10), // Adjust the radius here
-                  ))),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-          ],
-        ),
-        decoration: BoxDecoration(
-            color: const Color(0xFFFF9900),
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(35), topRight: Radius.circular(35))),
-        height: 50,
-      ),
-      body: ListView(
-        children: [
-          Column(
-            children: [
-              SizedBox(
-                height: 60,
-              ),
-              ConstrainedBox(
-                constraints: BoxConstraints.tightFor(
-                    width: MediaQuery.of(context).size.width - 75),
-                child: Column(children: [
-                  Image.network(
-                    widget.image_url,
-                    fit: BoxFit.fitWidth,
-                  ),
-                  // color: Colors.amber,
+              centerTitle: true,
 
+              backgroundColor: const Color(0xFFFF9900),
+            ),
+            bottomNavigationBar: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: _addItemToCart,
+                    child: const Text(
+                      "KERANJANG",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(const Color(0xFFFF9900)),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(
+                              10), // Adjust the radius here
+                        ))),
+                  ),
                   SizedBox(
-                    height: 10,
+                    width: 10,
                   ),
-                  Text(
-                    widget.nama_produk,
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                ],
+              ),
+              decoration: BoxDecoration(
+                  color: const Color(0xFFFF9900),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(35),
+                      topRight: Radius.circular(35))),
+              height: 50,
+            ),
+            body: ListView(
+              children: [
+                Column(
+                  children: [
+                    SizedBox(
+                      height: 60,
+                    ),
+                    ConstrainedBox(
+                      constraints: BoxConstraints.tightFor(
+                          width: MediaQuery.of(context).size.width - 75),
+                      child: Column(children: [
+                        Image.network(
+                          widget.image_url,
+                          fit: BoxFit.fitWidth,
+                        ),
+                        // color: Colors.amber,
+
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          widget.nama_produk,
+                          style: TextStyle(fontSize: 24),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Rp. ${widget.harga}",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 30,
+                              child: VerticalDivider(
+                                thickness: 1,
+                                color: Colors.black,
+                              ),
+                            ),
+                            // ListView.builder(
+                            //   itemCount: 4,
+                            //   itemBuilder: (context, index) {
+                            //     return Icon(
+                            //         IconData(0xe5f9, fontFamily: 'MaterialIcons'));
+                            //   },
+                            // ),
+                            Container(
+                              // color: Colors.red,
+                              width: 120,
+                              height: 30,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: rating,
+                                itemBuilder: (context, index) {
+                                  return Icon(IconData(0xe5f9,
+                                      fontFamily: 'MaterialIcons'));
+                                },
+                              ),
+                            ),
+
+                            // Icon(IconData(0xe5f9, fontFamily: 'MaterialIcons')),
+                          ],
+                        )
+                      ]),
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Rp. ${widget.harga}",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      Text("Colors"),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      DetailPickerWidget(
+                        list: colortype.isNotEmpty ? colortype : [],
+                        colorPick: true,
                       ),
                       SizedBox(
-                        height: 30,
-                        child: VerticalDivider(
-                          thickness: 1,
-                          color: Colors.black,
-                        ),
+                        height: 5,
                       ),
-                      // ListView.builder(
-                      //   itemCount: 4,
-                      //   itemBuilder: (context, index) {
-                      //     return Icon(
-                      //         IconData(0xe5f9, fontFamily: 'MaterialIcons'));
-                      //   },
-                      // ),
-                      Container(
-                        // color: Colors.red,
-                        width: 120,
-                        height: 30,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: rating,
-                          itemBuilder: (context, index) {
-                            return Icon(
-                                IconData(0xe5f9, fontFamily: 'MaterialIcons'));
-                          },
-                        ),
+                      Text("Ukuran"),
+                      SizedBox(
+                        height: 5,
                       ),
-
-                      // Icon(IconData(0xe5f9, fontFamily: 'MaterialIcons')),
-                    ],
-                  )
-                ]),
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Colors"),
-                SizedBox(
-                  height: 5,
-                ),
-                DetailPickerWidget(
-                  list: colortype.isNotEmpty ? colortype : ['-'],
-                  colorPick: true,
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text("Ukuran"),
-                SizedBox(
-                  height: 5,
-                ),
-                DetailPickerWidget(
-                  list: size.isNotEmpty ? size : ['-'],
-                  colorPick: false,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text("Deskripsi Produk"),
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: List.generate(
-                      DeskripsiList.length,
-                      (index) => RichText(
-                        text: TextSpan(
-                          children: [
-                            WidgetSpan(
-                              child: Text(
-                                // '• ${DeskripsiList[index]}',
-                                description.isNotEmpty ? description : '',
-                                style: TextStyle(fontSize: 15),
-                              ), // Bullet character
+                      DetailPickerWidget(
+                        list: size.isNotEmpty ? size : [],
+                        colorPick: false,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text("Deskripsi Produk"),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: List.generate(
+                            DeskripsiList.length,
+                            (index) => RichText(
+                              text: TextSpan(
+                                children: [
+                                  WidgetSpan(
+                                    child: Text(
+                                      // '• ${DeskripsiList[index]}',
+                                      description.isNotEmpty ? description : '',
+                                      style: TextStyle(fontSize: 15),
+                                    ), // Bullet character
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
-                        ),
-                      ),
-                    )),
+                          )),
+                    ],
+                  ),
+                ),
+                // Add more items as needed
               ],
             ),
-          ),
-          // Add more items as needed
-        ],
-      ),
-    );
+          )
+        : Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
   }
 }

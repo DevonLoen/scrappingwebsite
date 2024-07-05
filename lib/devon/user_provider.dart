@@ -120,7 +120,7 @@ class Auth extends ChangeNotifier {
   }
 
   Future<bool> signup(String email, String password, String first_name,
-      String last_name, BuildContext context) async {
+      String address, int phone_number, BuildContext context) async {
     UserListProvider userListProvider =
         Provider.of<UserListProvider>(context, listen: false);
     final prefs = await SharedPreferences.getInstance();
@@ -130,11 +130,12 @@ class Auth extends ChangeNotifier {
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
-          body: jsonEncode(<String, String>{
+          body: jsonEncode(<String, dynamic>{
             "email": email,
             "password": password,
             "first_name": first_name,
-            "last_name": last_name
+            "address": address,
+            "phone_number": phone_number,
           }));
       if (response.statusCode == 200) {
         User newUser = User(

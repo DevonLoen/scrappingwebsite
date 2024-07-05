@@ -329,7 +329,8 @@ class _Signup_screenState extends State<Signup_screen> {
                     _emailController.text,
                     _passwordController.text,
                     _usernameController.text,
-                    'Muda',
+                    'Jln Rahayu',
+                    int.parse(_numberController.text),
                     context);
               } catch (e) {
                 AwesomeDialog(
